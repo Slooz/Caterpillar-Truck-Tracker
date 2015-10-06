@@ -1,21 +1,25 @@
 package edu.bradley.catsensorapp;
 
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
+
 /**
  * Created by dakotaleonard on 10/5/15.
  */
 public class TimeSensorData
 {
-    public enum CatSensorType {ACCEL, ORIENT};
 
     public float x, y, z;
-    private long deltaTime;
+    public int sensorType;
+    public long time;
 
-    public TimeSensorData(float[] values, long deltaTime)
+    public TimeSensorData(final float[] values, final long time, final int sensorType)
     {
         x = values[0];
         y = values[1];
         z = values[2];
-        this.deltaTime = deltaTime;
+        this.time = time;
+        this.sensorType = sensorType;
     }
 
     public float getX()
@@ -23,7 +27,7 @@ public class TimeSensorData
         return x;
     }
 
-    public void setX(float x)
+    public void setX(final float x)
     {
         this.x = x;
     }
@@ -33,7 +37,7 @@ public class TimeSensorData
         return y;
     }
 
-    public void setY(float y)
+    public void setY(final float y)
     {
         this.y = y;
     }
@@ -43,19 +47,29 @@ public class TimeSensorData
         return z;
     }
 
-    public void setZ(float z)
+    public void setZ(final float z)
     {
         this.z = z;
     }
 
-    public long getDeltaTime()
+    public int getSensorType()
     {
-        return deltaTime;
+        return sensorType;
     }
 
-    public void setDeltaTime(long deltaTime)
+    public void setSensorType(final int sensorType)
     {
-        this.deltaTime = deltaTime;
+        this.sensorType = sensorType;
+    }
+
+    public long getTime()
+    {
+        return time;
+    }
+
+    public void setTime(final long time)
+    {
+        this.time = time;
     }
 
 }

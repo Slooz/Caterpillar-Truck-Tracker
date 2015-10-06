@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by dakotaleonard on 10/5/15.
+ * No Longer Used
  */
 public class TimeSeriesSensorData implements Iterable<TimeSensorData>, Iterator<TimeSensorData>
 {
