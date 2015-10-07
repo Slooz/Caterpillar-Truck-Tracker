@@ -8,18 +8,20 @@ import android.hardware.SensorManager;
  */
 public class TimeSensorData
 {
-
+    enum TractorState {UNKNOWN, MOVING, LOADING, UNLOADING};
+    public TractorState curState;
     public float x, y, z;
     public int sensorType;
     public long time;
 
-    public TimeSensorData(final float[] values, final long time, final int sensorType)
+    public TimeSensorData(final float[] values, final long time, final int sensorType, final TractorState curState)
     {
         x = values[0];
         y = values[1];
         z = values[2];
         this.time = time;
         this.sensorType = sensorType;
+        this.curState = curState;
     }
 
     public float getX()
@@ -72,4 +74,13 @@ public class TimeSensorData
         this.time = time;
     }
 
+    public TractorState getCurState()
+    {
+        return curState;
+    }
+
+    public void setCurState(TractorState curState)
+    {
+        this.curState = curState;
+    }
 }

@@ -5,16 +5,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class SensorActivity extends ActionBarActivity
 {
-
-    TextView accelView, magView;
     Context context;
     SensorManager sensorManager;
     Sensor accel, mag;
     SensorListener accelLst, magLst;
+    //TODO TimeDataGraph accelGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,23 +22,18 @@ public class SensorActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor);
 
-        accelView = (TextView)findViewById(R.id.accelView);
-        magView = (TextView)findViewById(R.id.magView);
-
+        //TODO accelGraph = (TimeDataGraph)findViewById(R.id.accelGraph);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mag = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-        accelLst = new SensorListener(Sensor.TYPE_ACCELEROMETER, accelView);
-        magLst = new SensorListener(Sensor.TYPE_MAGNETIC_FIELD, magView);
+        accelLst = new SensorListener(Sensor.TYPE_ACCELEROMETER, null);
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        sensorManager.registerListener(accelLst, accel, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(magLst, mag, SensorManager.SENSOR_DELAY_NORMAL);
+        //sensorManager.registerListener(accelLst, accel, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -46,6 +41,19 @@ public class SensorActivity extends ActionBarActivity
     {
         super.onPause();
         sensorManager.unregisterListener(accelLst);
-        sensorManager.unregisterListener(magLst);
+    }
+
+    public void startRecording(View view)
+    {
+        System.out.println("STARTED");
+        sensorManager.registerListener(accelLst, accel, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void stopRecording(View view)
+    {
+        System.out.println("STOPPED");
+        sensorManager.unregisterListener(accelLst);
+        accelLst.series.writeToCSV("data_"+System.currentTimeMillis()+".csv", getApplicationContext());
+        accelLst.series.clear();
     }
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CatSensorApp</string>
+    <string name="text_accel">Accelerometer</string>
 </resources>

@@ -11,18 +11,23 @@ import android.widget.TextView;
 public class SensorListener implements SensorEventListener
 {
     public int sensorType;
-    private TextView txt;
+    public TimeDataGraph graph;
+    public TimeSeriesSensorData series;
+    public TimeSensorData.TractorState tracState = TimeSensorData.TractorState.UNKNOWN;
 
-    public SensorListener(int sensorType, TextView txt)
+    public SensorListener(int sensorType,  TimeDataGraph graph)
     {
         this.sensorType = sensorType;
-        this.txt = txt;
+        series = new TimeSeriesSensorData();
+        //TODO this.graph = graph;
+        //TODO graph.attachDataSeries(series);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event)
     {
-        txt.setText(String.format("(%.3f,%.3f,%.3f", event.values[0], event.values[1], event.values[2]));
+        series.StorePoint(event.values, sensorType, tracState);
+        //TODO graph.invalidate();
     }
 
     @Override
