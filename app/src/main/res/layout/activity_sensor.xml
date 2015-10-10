@@ -17,19 +17,65 @@
         android:layout_height="wrap_content"
         android:text="@string/text_accel"/>
 
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/startButton"
-        android:text="Start Recording"
-        android:onClick="startRecording"/>
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/startButton"
+                android:text="Start Recording"
+                android:onClick="startRecording"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/stopButton"
-        android:text="Start Recording"
-        android:onClick="stopRecording"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stopButton"
+                android:text="Stop Recording"
+                android:onClick="stopRecording"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
+            android:paddingLeft="200dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current State: Stopped"
+                android:textSize="25sp"
+                android:id="@+id/stateTextView"/>
+            <Button
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/loadingButton"
+                android:text="Loading"
+                android:onClick="buttonStateChange"/>
+            <Button
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/unloadingButton"
+                android:text="Unloading"
+                android:onClick="buttonStateChange"/>
+            <Button
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/movingButton"
+                android:text="Moving"
+                android:onClick="buttonStateChange"/>
+            <Button
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/stoppedButton"
+                android:text="Stopped"
+                android:onClick="buttonStateChange"/>
+        </LinearLayout>
+    </LinearLayout>
 
 
 

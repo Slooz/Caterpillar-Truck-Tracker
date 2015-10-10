@@ -3,7 +3,6 @@ package edu.bradley.catsensorapp;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.widget.TextView;
 
 /**
  * Created by dakotaleonard on 10/6/15.
@@ -11,28 +10,23 @@ import android.widget.TextView;
 public class SensorListener implements SensorEventListener
 {
     public int sensorType;
-    public TimeDataGraph graph;
     public TimeSeriesSensorData series;
-    public TimeSensorData.TractorState tracState = TimeSensorData.TractorState.UNKNOWN;
+    public TimeSensorData.TractorState tracState = TimeSensorData.TractorState.STOPPED;
 
-    public SensorListener(int sensorType,  TimeDataGraph graph)
+    public SensorListener(int sensorType)
     {
         this.sensorType = sensorType;
         series = new TimeSeriesSensorData();
-        //TODO this.graph = graph;
-        //TODO graph.attachDataSeries(series);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event)
     {
-        series.StorePoint(event.values, sensorType, tracState);
-        //TODO graph.invalidate();
+        series.StorePoint(event.values, sensorType, tracState, System.currentTimeMillis());
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy)
     {
-
     }
 }

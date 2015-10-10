@@ -2,6 +2,7 @@ package edu.bradley.catsensorapp;
 
 import android.content.Context;
 import android.os.Environment;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,21 +17,58 @@ import java.util.NoSuchElementException;
  * Created by dakotaleonard on 10/5/15.
  * No Longer Used
  */
-public class TimeSeriesSensorData implements Iterable<TimeSensorData>, Iterator<TimeSensorData>
+public class TimeSeriesSensorData implements Iterable<TimeSensorData>
 {
     final private short DEFAULT_SIZE = 100;
     private TimeSensorData[] dataPoints;
     private int curInsertIndex = 0;
-    private int iterIndex = 0;
+    private long startTime;
+
+    /**
+     * Iterator for TimeSeriesSensorData class
+     */
+    private class selfIter implements Iterator<TimeSensorData>
+    {
+        TimeSeriesSensorData series;
+        int iterIndex;
+
+        public selfIter(TimeSeriesSensorData series)
+        {
+            startTime = System.currentTimeMillis();
+            this.series = series;
+            iterIndex = 0;
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            return iterIndex < series.curInsertIndex;
+        }
+
+        @Override
+        public TimeSensorData next()
+        {
+            if(hasNext())
+                return series.dataPoints[iterIndex++];
+            else
+                throw new NoSuchElementException("No element exists pass current elements pointed to by iterator");
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
 
     public TimeSeriesSensorData()
     {
         dataPoints = new TimeSensorData[DEFAULT_SIZE];
     }
 
-    public TimeSensorData StorePoint(float[] values, int sensorType, TimeSensorData.TractorState curState)
+    public TimeSensorData StorePoint(float[] values, int sensorType, TimeSensorData.TractorState curState, long time)
     {
-        TimeSensorData newData = new TimeSensorData(values, System.currentTimeMillis(), sensorType, curState);
+        TimeSensorData newData = new TimeSensorData(values, time-startTime, sensorType, curState);
         if(curInsertIndex >= dataPoints.length)
         {
             //Expand
@@ -53,28 +91,7 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData>, Iterator<
     @Override
     public Iterator<TimeSensorData> iterator()
     {
-        return this;
-    }
-
-    @Override
-    public boolean hasNext()
-    {
-        return iterIndex < curInsertIndex;
-    }
-
-    @Override
-    public TimeSensorData next() throws NoSuchElementException
-    {
-        if(hasNext())
-            return dataPoints[iterIndex++];
-        else
-            throw new NoSuchElementException("No element exists pass current elements pointed to by iterator");
-    }
-
-    @Override
-    public void remove()
-    {
-        throw new UnsupportedOperationException();
+        return new selfIter(this);
     }
 
     /**
@@ -119,15 +136,20 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData>, Iterator<
         return dataPointsToRet;
     }
 
-    public void writeToCSV(String name, Context con)
+    public void writeToCSV(String name, Context context)
     {
-        File file = new File(Environment.getExternalStorageDirectory() + "/Documents", name);
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + name);
+        System.out.println(file + "\t" + file.exists());
         FileOutputStream os = null;
         try
         {
             System.out.println(file);
             os = new FileOutputStream(file);
-            os.write(new String("TEST").getBytes());
+            Toast.makeText(context, "Saved file to documents", Toast.LENGTH_LONG).show();
+            for(TimeSensorData d : this)
+            {
+                os.write(String.format("%d,%.3f,%.3f,%.3f,%s\n",d.getTime(), d.getX(), d.getY(),d.getZ(),TimeSensorData.getStateString(d.getState())).getBytes());
+            }
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -148,7 +170,6 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData>, Iterator<
     public void clear()
     {
         dataPoints = new TimeSensorData[DEFAULT_SIZE];
-        iterIndex = 0;
         curInsertIndex = 0;
     }
 }
