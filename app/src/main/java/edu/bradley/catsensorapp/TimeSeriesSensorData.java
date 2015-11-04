@@ -8,6 +8,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -107,6 +108,35 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData> , Serializ
         return new selfIter(this);
     }
 
+    public void writeSerial (File file, Context context) throws Exception
+    {
+        if (dataPoints.length == 0)
+        {
+            throw new Exception("This data series contains no data points");
+        }
+
+        ObjectOutputStream oos = null;
+        try
+        {
+            System.out.println(file);
+            oos = new ObjectOutputStream(new FileOutputStream(file));
+            oos.writeObject(this);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                oos.close();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void writeToCSV(File file, Context context) throws Exception
     {
         if(dataPoints.length == 0)
@@ -114,7 +144,6 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData> , Serializ
             throw new Exception("This data series contains no data points");
         }
 
-        System.out.println(file + "\t" + file.exists());
         FileOutputStream os = null;
         try
         {
@@ -133,7 +162,6 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData> , Serializ
             {
                 os.write(String.format("%s,%d,%s\n",d.getValue().getCsvSegment(), d.getTime(),TimeSensorData.getStateString(d.getState())).getBytes());
             }
-            Toast.makeText(context, "Saved file to documents", Toast.LENGTH_LONG).show();
 
         }catch (Exception e)
         {

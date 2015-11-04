@@ -57,6 +57,7 @@ public class Vector3SensorListener implements SensorEventListener
             try
             {
                 seriesData.writeToCSV(new File(csvFolder.getAbsolutePath() + File.separator + seriesData.sensor.getName() + ".csv"), context);
+                seriesData.writeSerial(new File(serialFolder.getAbsolutePath() + File.separator + seriesData.sensor.getName() + ".ser"), context);
             }catch(Exception e)
             {
                 System.err.println("Failed to create file for " + seriesData.sensor.getName() +" \n" + e.getMessage());

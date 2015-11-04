@@ -26,7 +26,8 @@ public class GPSListener implements LocationListener
     @Override
     public void onLocationChanged(Location location)
     {
-        locationData.StorePoint(new GPSData(location), sensorActivity.tracState, System.currentTimeMillis());
+        if(sensorActivity.recording)
+            locationData.StorePoint(new GPSData(location), sensorActivity.tracState, System.currentTimeMillis());
     }
 
     @Override
@@ -52,7 +53,8 @@ public class GPSListener implements LocationListener
         //Write csv file
         try
         {
-            locationData.writeToCSV(new File(csvFolder.getAbsolutePath() + File.separator +  "GPS.csv"), context);
+            locationData.writeToCSV(new File(csvFolder.getAbsolutePath() + File.separator + "GPS.csv"), context);
+            locationData.writeSerial(new File(serialFolder.getAbsolutePath() + File.separator + "GPS.ser"), context);
         }catch(Exception e)
         {
             System.err.println("Failed to create file for GPS\n" + e.getMessage());

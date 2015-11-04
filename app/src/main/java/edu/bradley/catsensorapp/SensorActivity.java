@@ -4,9 +4,10 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Environment;
-import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.security.Provider;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,18 +23,15 @@ import java.util.TimeZone;
 
 public class SensorActivity extends ActionBarActivity
 {
-    Context context;
     SensorManager sensorManager;
     LocationManager locManager;
 
     Vector3SensorListener v3Listener;
     GPSListener gpsListener;
     Criteria criteria;
-    String provider;
 
     boolean recording = false;
     Sensor sensors[];
-
     TextView recordingTextView;
 
     public TimeSensorData.TractorState tracState;
@@ -49,7 +46,6 @@ public class SensorActivity extends ActionBarActivity
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        //Add sensors and listeners TODO
 
         v3Listener = new Vector3SensorListener(this);
         gpsListener = new GPSListener(this);
@@ -66,27 +62,23 @@ public class SensorActivity extends ActionBarActivity
             v3Listener.addSensor(s);
         }
 
-        criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-
-        provider = LocationManager.GPS_PROVIDER;
-        //provider = locManager.getBestProvider(criteria, false);
-
         recordingTextView = (TextView)findViewById(R.id.recordingText);
+
+        criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setSpeedRequired(true);
     }
 
     private void registerListeners()
     {
         for(Sensor s : sensors)
             sensorManager.registerListener(v3Listener, s, SensorManager.SENSOR_DELAY_NORMAL);
-        locManager.requestLocationUpdates(provider, 0, 0, gpsListener);
     }
 
     private void unregisterListeners()
     {
         for(Sensor s : sensors)
             sensorManager.registerListener(v3Listener, s, SensorManager.SENSOR_DELAY_NORMAL);
-        locManager.removeUpdates(gpsListener);
     }
 
     @Override
@@ -95,6 +87,7 @@ public class SensorActivity extends ActionBarActivity
         super.onResume();
         if(recording)
             registerListeners();
+        locManager.requestLocationUpdates(locManager.getBestProvider(criteria, true), 0, 0, gpsListener);
     }
 
     @Override
@@ -103,7 +96,7 @@ public class SensorActivity extends ActionBarActivity
         super.onPause();
         if(recording)
             unregisterListeners();
-
+        locManager.removeUpdates(gpsListener);
     }
 
     public void startRecording(View view)
@@ -157,6 +150,7 @@ public class SensorActivity extends ActionBarActivity
                 s.clear();
             }
 
+            Toast.makeText(getApplicationContext(), "Saved file to documents", Toast.LENGTH_LONG).show();
             gpsListener.locationData.clear();
         }
         else
