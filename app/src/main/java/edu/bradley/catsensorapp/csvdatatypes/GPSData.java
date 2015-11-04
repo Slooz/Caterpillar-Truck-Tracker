@@ -2,13 +2,15 @@ package edu.bradley.catsensorapp.csvdatatypes;
 
 import android.location.Location;
 
+import java.io.Serializable;
+
 /**
  * Class representing a piece of GPS data
  * Contains the angles for longitude and latitude, the bearing angle, altitude, and current speed
  * See type definitions and references in {@link android.location.Location}
  * Created by dakotaleonard on 10/30/15.
  */
-public class GPSData implements ICsvWritable
+public class GPSData implements ICsvWritable, Serializable
 {
     double longitude, latitude, altitude;
     float bearing, speed;

@@ -28,7 +28,7 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData> , Serializ
     private TimeSensorData[] dataPoints;
     private int curInsertIndex = 0;
     private long startTime;
-    public Sensor sensor;
+    public String sensor;
 
     /**
      * Iterator for TimeSeriesSensorData class
@@ -69,7 +69,7 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData> , Serializ
 
     public TimeSeriesSensorData(Sensor sensor)
     {
-        this.sensor = sensor;
+        this.sensor = sensor.getName();
         dataPoints = new TimeSensorData[DEFAULT_SIZE];
         startTime = System.currentTimeMillis();
     }

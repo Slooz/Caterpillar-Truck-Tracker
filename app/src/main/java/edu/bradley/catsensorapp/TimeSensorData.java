@@ -1,11 +1,13 @@
 package edu.bradley.catsensorapp;
 
+import java.io.Serializable;
+
 import edu.bradley.catsensorapp.csvdatatypes.ICsvWritable;
 
 /**
  * Created by dakotaleonard on 10/5/15.
  */
-public class TimeSensorData<DataType extends ICsvWritable>
+public class TimeSensorData<DataType extends ICsvWritable> implements Serializable
 {
     enum TractorState {UNKNOWN, MOVING, LOADING, UNLOADING, STOPPED};
     public TractorState state;

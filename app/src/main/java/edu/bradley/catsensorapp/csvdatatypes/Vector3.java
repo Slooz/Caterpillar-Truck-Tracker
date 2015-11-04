@@ -1,10 +1,12 @@
 package edu.bradley.catsensorapp.csvdatatypes;
 
+import java.io.Serializable;
+
 /**
  * Implementation of a 3 dimensional vector which allows for insertion of x,y,z data into a csv file line
  * Created by dakotaleonard on 10/29/15.
  */
-public class Vector3 implements ICsvWritable
+public class Vector3 implements ICsvWritable, Serializable
 {
     float x,y,z;
 

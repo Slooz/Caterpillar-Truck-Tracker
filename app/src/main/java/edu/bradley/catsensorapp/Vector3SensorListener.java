@@ -39,7 +39,7 @@ public class Vector3SensorListener implements SensorEventListener
     {
         for(TimeSeriesSensorData seriesData : series)
         {
-            if(seriesData.sensor.getType() == event.sensor.getType())
+            if(seriesData.sensor.equals(event.sensor.getName()))
             {
                 synchronized (sensorActivity.tracState)
                 {
@@ -56,11 +56,11 @@ public class Vector3SensorListener implements SensorEventListener
         {
             try
             {
-                seriesData.writeToCSV(new File(csvFolder.getAbsolutePath() + File.separator + seriesData.sensor.getName() + ".csv"), context);
-                seriesData.writeSerial(new File(serialFolder.getAbsolutePath() + File.separator + seriesData.sensor.getName() + ".ser"), context);
+                seriesData.writeToCSV(new File(csvFolder.getAbsolutePath() + File.separator + seriesData.sensor + ".csv"), context);
+                seriesData.writeSerial(new File(serialFolder.getAbsolutePath() + File.separator + seriesData.sensor + ".ser"), context);
             }catch(Exception e)
             {
-                System.err.println("Failed to create file for " + seriesData.sensor.getName() +" \n" + e.getMessage());
+                System.err.println("Failed to create file for " + seriesData.sensor +" \n" + e.getMessage());
             }
         }
 
