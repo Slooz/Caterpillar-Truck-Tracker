@@ -1,57 +1,34 @@
 package edu.bradley.catsensorapp;
 
-import android.hardware.SensorEvent;
-import android.hardware.SensorManager;
+import edu.bradley.catsensorapp.csvdatatypes.ICsvWritable;
 
 /**
  * Created by dakotaleonard on 10/5/15.
  */
-public class TimeSensorData
+public class TimeSensorData<DataType extends ICsvWritable>
 {
     enum TractorState {UNKNOWN, MOVING, LOADING, UNLOADING, STOPPED};
     public TractorState state;
-    public float x, y, z;
+    public DataType value;
     public int sensorType;
     public long time;
 
-    public TimeSensorData(final float[] values, final long time, final int sensorType, final TractorState state)
+    public TimeSensorData(DataType value, final long time, final int sensorType, final TractorState state)
     {
-        x = values[0];
-        y = values[1];
-        z = values[2];
+        this.value = value;
         this.time = time;
         this.sensorType = sensorType;
         this.state = state;
     }
 
-    public float getX()
+    public DataType getValue()
     {
-        return x;
+        return value;
     }
 
-    public void setX(final float x)
+    public void setValue(DataType value)
     {
-        this.x = x;
-    }
-
-    public float getY()
-    {
-        return y;
-    }
-
-    public void setY(final float y)
-    {
-        this.y = y;
-    }
-
-    public float getZ()
-    {
-        return z;
-    }
-
-    public void setZ(final float z)
-    {
-        this.z = z;
+        this.value = value;
     }
 
     public int getSensorType()

@@ -4,6 +4,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
+import edu.bradley.catsensorapp.csvdatatypes.Vector3;
+
 /**
  * Created by dakotaleonard on 10/6/15.
  */
@@ -22,7 +24,7 @@ public class SensorListener implements SensorEventListener
     @Override
     public void onSensorChanged(SensorEvent event)
     {
-        series.StorePoint(event.values, sensorType, tracState, System.currentTimeMillis());
+        series.StorePoint(new Vector3(event.values[0],event.values[1],event.values[2]), sensorType, tracState, System.currentTimeMillis());
     }
 
     @Override

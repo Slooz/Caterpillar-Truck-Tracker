@@ -7,11 +7,11 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
+
+import edu.bradley.catsensorapp.csvdatatypes.ICsvWritable;
 
 /**
  * Created by dakotaleonard on 10/5/15.
@@ -66,9 +66,9 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData>
         dataPoints = new TimeSensorData[DEFAULT_SIZE];
     }
 
-    public TimeSensorData StorePoint(float[] values, int sensorType, TimeSensorData.TractorState curState, long time)
+    public TimeSensorData StorePoint(ICsvWritable value, int sensorType, TimeSensorData.TractorState curState, long time)
     {
-        TimeSensorData newData = new TimeSensorData(values, time-startTime, sensorType, curState);
+        TimeSensorData newData = new TimeSensorData(value, time-startTime, sensorType, curState);
         if(curInsertIndex >= dataPoints.length)
         {
             //Expand
@@ -94,48 +94,6 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData>
         return new selfIter(this);
     }
 
-    /**
-     * Returns data across time span, each data point is in an array of size 4
-     * 0 - Time
-     * 1 - X
-     * 2 - Y
-     * 3 - Z
-     * @param startTime Earliest time of time series data to be returned
-     * @param endTime Latest time of time series data to be returned
-     * @return Array of array outer array is in order of time, inner array is descrived above
-     */
-    public List<float[]> getDataAcrossTimeSpan(long startTime, long endTime)
-    {
-        List<float[]> dataPointsToRet = new ArrayList<float[]>();
-        boolean startedAdding = false;
-
-        for(TimeSensorData data : this)
-        {
-            //Check if we have entered time span, if not check if we need to
-            if(!startedAdding)
-            {
-                startedAdding = data.getTime() >= startTime;
-            }
-
-            if(startedAdding)
-            {
-                if(data.getTime() > endTime)
-                    break;
-                else
-                {
-                    float[] toAdd = new float[4];
-                    toAdd[0] = data.getTime();
-                    toAdd[1] = data.getX();
-                    toAdd[2] = data.getY();
-                    toAdd[3] = data.getZ();
-                    dataPointsToRet.add(toAdd);
-                }
-            }
-        }
-
-        return dataPointsToRet;
-    }
-
     public void writeToCSV(String name, Context context)
     {
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + name);
@@ -145,11 +103,12 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData>
         {
             System.out.println(file);
             os = new FileOutputStream(file);
-            Toast.makeText(context, "Saved file to documents", Toast.LENGTH_LONG).show();
             for(TimeSensorData d : this)
             {
-                os.write(String.format("%d,%.3f,%.3f,%.3f,%s\n",d.getTime(), d.getX(), d.getY(),d.getZ(),TimeSensorData.getStateString(d.getState())).getBytes());
+                os.write(String.format("%s,%d,%s\n",d.getValue().getCsvSegment(), d.getTime(),TimeSensorData.getStateString(d.getState())).getBytes());
             }
+            Toast.makeText(context, "Saved file to documents", Toast.LENGTH_LONG).show();
+
         }catch (Exception e)
         {
             e.printStackTrace();
