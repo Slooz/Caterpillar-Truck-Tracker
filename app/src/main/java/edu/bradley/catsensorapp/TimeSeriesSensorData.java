@@ -1,28 +1,33 @@
 package edu.bradley.catsensorapp;
 
 import android.content.Context;
+import android.hardware.Sensor;
 import android.os.Environment;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import edu.bradley.catsensorapp.csvdatatypes.GPSData;
 import edu.bradley.catsensorapp.csvdatatypes.ICsvWritable;
+import edu.bradley.catsensorapp.csvdatatypes.Vector3;
 
 /**
  * Created by dakotaleonard on 10/5/15.
  * No Longer Used
  */
-public class TimeSeriesSensorData implements Iterable<TimeSensorData>
+public class TimeSeriesSensorData implements Iterable<TimeSensorData> , Serializable
 {
     final private short DEFAULT_SIZE = 100;
     private TimeSensorData[] dataPoints;
     private int curInsertIndex = 0;
     private long startTime;
+    public Sensor sensor;
 
     /**
      * Iterator for TimeSeriesSensorData class
@@ -61,14 +66,22 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData>
         }
     }
 
+    public TimeSeriesSensorData(Sensor sensor)
+    {
+        this.sensor = sensor;
+        dataPoints = new TimeSensorData[DEFAULT_SIZE];
+        startTime = System.currentTimeMillis();
+    }
+
     public TimeSeriesSensorData()
     {
         dataPoints = new TimeSensorData[DEFAULT_SIZE];
+        startTime = System.currentTimeMillis();
     }
 
-    public TimeSensorData StorePoint(ICsvWritable value, int sensorType, TimeSensorData.TractorState curState, long time)
+    public TimeSensorData StorePoint(ICsvWritable value, TimeSensorData.TractorState curState, long time)
     {
-        TimeSensorData newData = new TimeSensorData(value, time-startTime, sensorType, curState);
+        TimeSensorData newData = new TimeSensorData(value, time-startTime, curState);
         if(curInsertIndex >= dataPoints.length)
         {
             //Expand
@@ -94,15 +107,28 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData>
         return new selfIter(this);
     }
 
-    public void writeToCSV(String name, Context context)
+    public void writeToCSV(File file, Context context) throws Exception
     {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + name);
+        if(dataPoints.length == 0)
+        {
+            throw new Exception("This data series contains no data points");
+        }
+
         System.out.println(file + "\t" + file.exists());
         FileOutputStream os = null;
         try
         {
             System.out.println(file);
             os = new FileOutputStream(file);
+            if(dataPoints[0].getValue() instanceof Vector3)
+            {
+                os.write(new String("x,y,z,timestamp,state\n").getBytes());
+            }
+            else if(dataPoints[0].getValue() instanceof GPSData)
+            {
+                os.write(new String("longitude,latitude,altitude,bearing,speed,timestamp,state\n").getBytes());
+            }
+
             for(TimeSensorData d : this)
             {
                 os.write(String.format("%s,%d,%s\n",d.getValue().getCsvSegment(), d.getTime(),TimeSensorData.getStateString(d.getState())).getBytes());
@@ -130,5 +156,6 @@ public class TimeSeriesSensorData implements Iterable<TimeSensorData>
     {
         dataPoints = new TimeSensorData[DEFAULT_SIZE];
         curInsertIndex = 0;
+        startTime = System.currentTimeMillis();
     }
 }
