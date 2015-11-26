@@ -1,0 +1,28 @@
+/*
+ * Copyright 2015 Nathan Clark, Krzysztof Czelusniak, Michael Holwey, Dakota Leonard
+ */
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
+
+    defaultConfig {
+        applicationId 'edu.bradley.cattrucktracker'
+        minSdkVersion 21
+        targetSdkVersion 23
+        versionCode 0
+        versionName '0'
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+        }
+        release {
+            minifyEnabled true
+            proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
+            shrinkResources true
+        }
+    }
+}

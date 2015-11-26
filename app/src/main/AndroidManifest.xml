@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright 2015 Nathan Clark, Krzysztof Czelusniak, Michael Holwey, Dakota Leonard
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.bradley.cattrucktracker">
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/launch_icon">
+
+        <activity android:name="edu.bradley.cattrucktracker.TruckTrackerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>
