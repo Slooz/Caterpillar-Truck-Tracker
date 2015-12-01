@@ -61,6 +61,11 @@ public class Vector3 implements ICsvWritable, Serializable
         return z;
     }
 
+    public float getMagnitude()
+    {
+        return (float)Math.sqrt(x*x+y*y+z*z);
+    }
+
     /**
      * Returns a string for insertion into a csv line
      * @return Formatted data as x,y,z
