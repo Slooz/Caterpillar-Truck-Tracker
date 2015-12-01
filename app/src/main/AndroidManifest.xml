@@ -20,7 +20,7 @@
 
         <service android:name=".AccelerationForceMonitorService" />
 
-        <service android:name=".MovingMonitorService" />
+        <service android:name=".TruckMovingMonitor" />
 
     </application>
 

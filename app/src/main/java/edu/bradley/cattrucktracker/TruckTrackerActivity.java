@@ -19,12 +19,12 @@ public class TruckTrackerActivity extends Activity implements GoogleApiClient.Co
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        Intent intent = new Intent(this, MovingMonitorService.class);
+        Intent intent = new Intent(this, TruckMovingMonitor.class);
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(LOCATION_REQUEST_MILLISECOND_INTERVAL);
         PendingIntent pendingIntent = PendingIntent
-                .getService(this, MovingMonitorService.LOCATION_REQUEST_REQUEST_CODE, intent, 0);
+                .getService(this, TruckMovingMonitor.LOCATION_REQUEST_REQUEST_CODE, intent, 0);
         LocationServices.FusedLocationApi
                 .requestLocationUpdates(googleApiClient, locationRequest, pendingIntent);
     }

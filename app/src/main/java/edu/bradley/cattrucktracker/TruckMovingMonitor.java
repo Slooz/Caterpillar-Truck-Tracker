@@ -10,11 +10,11 @@ import android.location.Location;
 
 import com.google.android.gms.location.LocationResult;
 
-public class MovingMonitorService extends IntentService {
+public class TruckMovingMonitor extends IntentService {
     static final int LOCATION_REQUEST_REQUEST_CODE = 0;
 
-    public MovingMonitorService() {
-        super(MovingMonitorService.class.getSimpleName());
+    public TruckMovingMonitor() {
+        super(TruckMovingMonitor.class.getSimpleName());
     }
 
     @Override
@@ -22,7 +22,7 @@ public class MovingMonitorService extends IntentService {
         LocationResult locationResult = LocationResult.extractResult(intent);
         if (locationResult != null) {
             Location location = locationResult.getLastLocation();
-            boolean moving = location.hasSpeed();
+            boolean truckMoving = location.hasSpeed();
         }
     }
 }
