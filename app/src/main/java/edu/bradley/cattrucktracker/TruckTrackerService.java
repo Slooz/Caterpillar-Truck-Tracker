@@ -10,9 +10,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.IBinder;
 
-public class DeviceAccelerationForceMonitor extends Service implements SensorEventListener {
+import com.google.android.gms.location.LocationResult;
+
+public class TruckTrackerService extends Service implements SensorEventListener {
     private SensorManager sensorManager;
 
     @Override
@@ -22,6 +25,16 @@ public class DeviceAccelerationForceMonitor extends Service implements SensorEve
         Sensor linearAcceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         sensorManager
                 .registerListener(this, linearAcceleration, SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (LocationResult.hasResult(intent)) {
+            LocationResult locationResult = LocationResult.extractResult(intent);
+            Location location = locationResult.getLastLocation();
+            boolean truckMoving = location.hasSpeed();
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -40,7 +53,10 @@ public class DeviceAccelerationForceMonitor extends Service implements SensorEve
         float x = event.values[0];
         float y = event.values[1];
         float z = event.values[2];
-        boolean deviceAccelerating = Math.abs(x) >= 0.5 || Math.abs(y) >= 0.5 || Math.abs(z) >= 0.5;
+        float absX = Math.abs(x);
+        float absY = Math.abs(y);
+        float absZ = Math.abs(z);
+        boolean deviceAccelerating = absX >= 0.5 || absY >= 0.5 || absZ >= 0.5;
     }
 
     @Override

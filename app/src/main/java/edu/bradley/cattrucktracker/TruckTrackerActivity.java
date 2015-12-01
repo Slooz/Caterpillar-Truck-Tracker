@@ -14,17 +14,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 public class TruckTrackerActivity extends Activity implements GoogleApiClient.ConnectionCallbacks {
-    private static final int LOCATION_REQUEST_MILLISECOND_INTERVAL = 0;
     private GoogleApiClient googleApiClient;
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        Intent intent = new Intent(this, TruckMovingMonitor.class);
+
         LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(LOCATION_REQUEST_MILLISECOND_INTERVAL);
-        PendingIntent pendingIntent = PendingIntent
-                .getService(this, TruckMovingMonitor.LOCATION_REQUEST_REQUEST_CODE, intent, 0);
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(0);
+        Intent intent = new Intent(this, TruckTrackerService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
         LocationServices.FusedLocationApi
                 .requestLocationUpdates(googleApiClient, locationRequest, pendingIntent);
     }
@@ -36,10 +34,10 @@ public class TruckTrackerActivity extends Activity implements GoogleApiClient.Co
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = new Intent(this, TruckTrackerService.class);
+        startService(intent);
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API).addConnectionCallbacks(this).build();
-        Intent intent = new Intent(this, DeviceAccelerationForceMonitor.class);
-        startService(intent);
     }
 
     @Override
