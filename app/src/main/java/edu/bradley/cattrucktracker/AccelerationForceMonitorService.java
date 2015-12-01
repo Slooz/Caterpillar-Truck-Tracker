@@ -20,7 +20,8 @@ public class AccelerationForceMonitorService extends Service implements SensorEv
         super.onCreate();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor linearAcceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        sensorManager.registerListener(this, linearAcceleration, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager
+                .registerListener(this, linearAcceleration, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     @Override
