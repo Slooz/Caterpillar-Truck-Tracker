@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".AccelerationForceMonitorService" />
+        <service android:name=".DeviceAccelerationForceMonitor" />
 
         <service android:name=".TruckMovingMonitor" />
 

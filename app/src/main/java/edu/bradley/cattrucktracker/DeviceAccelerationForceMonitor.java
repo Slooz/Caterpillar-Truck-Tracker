@@ -12,7 +12,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 
-public class AccelerationForceMonitorService extends Service implements SensorEventListener {
+public class DeviceAccelerationForceMonitor extends Service implements SensorEventListener {
     private SensorManager sensorManager;
 
     @Override

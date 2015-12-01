@@ -38,7 +38,7 @@ public class TruckTrackerActivity extends Activity implements GoogleApiClient.Co
         super.onCreate(savedInstanceState);
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API).addConnectionCallbacks(this).build();
-        Intent intent = new Intent(this, AccelerationForceMonitorService.class);
+        Intent intent = new Intent(this, DeviceAccelerationForceMonitor.class);
         startService(intent);
     }
 
