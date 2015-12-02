@@ -83,6 +83,9 @@ public class TruckTrackerService extends Service implements SensorEventListener 
         if (truckMoving) {
             truckState = TruckState.MOVING;
         }
+        else if (!deviceAccelerating) {
+            truckState = TruckState.STOPPED;
+        }
     }
 
     private enum TruckState {STOPPED, MOVING, LOADING, UNLOADING, UNKNOWN}
