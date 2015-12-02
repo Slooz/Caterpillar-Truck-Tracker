@@ -18,14 +18,16 @@ import com.google.android.gms.location.LocationResult;
 public class TruckTrackerService extends Service implements SensorEventListener {
     private SensorManager sensorManager;
     private TruckState truckState;
-    private boolean truckMoving;
-    private boolean deviceAccelerating;
+    private boolean truckLoaded;
+    private Boolean truckMoving;
+    private Boolean deviceAccelerating;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         truckState = TruckState.UNKNOWN;
+        truckLoaded = false;
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor linearAcceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -42,7 +44,9 @@ public class TruckTrackerService extends Service implements SensorEventListener 
 
             truckMoving = location.hasSpeed();
 
-            determineTruckState();
+            if (deviceAccelerating != null) {
+                determineTruckState();
+            }
         }
 
         return super.onStartCommand(intent, flags, startId);
@@ -72,7 +76,9 @@ public class TruckTrackerService extends Service implements SensorEventListener 
 
         deviceAccelerating = absX >= 0.5 || absY >= 0.5 || absZ >= 0.5;
 
-        determineTruckState();
+        if (truckMoving != null) {
+            determineTruckState();
+        }
     }
 
     @Override
@@ -82,9 +88,18 @@ public class TruckTrackerService extends Service implements SensorEventListener 
     private void determineTruckState() {
         if (truckMoving) {
             truckState = TruckState.MOVING;
-        }
-        else if (!deviceAccelerating) {
+        } else if (truckState == TruckState.MOVING || truckState == TruckState.UNKNOWN) {
             truckState = TruckState.STOPPED;
+        }
+
+        if (truckState == TruckState.STOPPED && deviceAccelerating) {
+            if (truckLoaded) {
+                truckState = TruckState.UNLOADING;
+                truckLoaded = false;
+            } else {
+                truckState = TruckState.LOADING;
+                truckLoaded = true;
+            }
         }
     }
 
