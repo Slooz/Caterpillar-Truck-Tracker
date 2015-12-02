@@ -12,10 +12,15 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.LocationResult;
 
 public class TruckTrackerService extends Service implements SensorEventListener {
+    static final String TRUCK_STATE_BROADCAST_ACTION
+            = TruckTrackerService.class.getPackage().getName() + "TRUCK_STATE";
+    static final String TRUCK_STATE_EXTRA = "truckState";
+    
     private SensorManager sensorManager;
     private TruckState truckState;
     private boolean truckLoaded;
@@ -86,6 +91,8 @@ public class TruckTrackerService extends Service implements SensorEventListener 
     }
 
     private void determineTruckState() {
+        TruckState oldTruckState = truckState;
+
         if (truckMoving) {
             truckState = TruckState.MOVING;
         } else if (truckState == TruckState.MOVING || truckState == TruckState.UNKNOWN) {
@@ -101,7 +108,16 @@ public class TruckTrackerService extends Service implements SensorEventListener 
                 truckLoaded = true;
             }
         }
+
+        if (oldTruckState != truckState) {
+            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
+            Intent intent = new Intent(TRUCK_STATE_BROADCAST_ACTION)
+                    .putExtra(TRUCK_STATE_EXTRA, truckState);
+
+            localBroadcastManager.sendBroadcast(intent);
+        }
     }
 
-    private enum TruckState {STOPPED, MOVING, LOADING, UNLOADING, UNKNOWN}
+    enum TruckState {STOPPED, MOVING, LOADING, UNLOADING, UNKNOWN}
 }
