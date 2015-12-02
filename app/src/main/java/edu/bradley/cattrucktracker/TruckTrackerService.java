@@ -24,9 +24,12 @@ public class TruckTrackerService extends Service implements SensorEventListener 
     @Override
     public void onCreate() {
         super.onCreate();
+
         truckState = TruckState.UNKNOWN;
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor linearAcceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
         sensorManager
                 .registerListener(this, linearAcceleration, SensorManager.SENSOR_DELAY_FASTEST);
     }
@@ -36,15 +39,19 @@ public class TruckTrackerService extends Service implements SensorEventListener 
         if (LocationResult.hasResult(intent)) {
             LocationResult locationResult = LocationResult.extractResult(intent);
             Location location = locationResult.getLastLocation();
+
             truckMoving = location.hasSpeed();
+
             determineTruckState();
         }
+
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         sensorManager.unregisterListener(this);
+
         super.onDestroy();
     }
 
@@ -58,10 +65,13 @@ public class TruckTrackerService extends Service implements SensorEventListener 
         float x = event.values[0];
         float y = event.values[1];
         float z = event.values[2];
+
         float absX = Math.abs(x);
         float absY = Math.abs(y);
         float absZ = Math.abs(z);
+
         deviceAccelerating = absX >= 0.5 || absY >= 0.5 || absZ >= 0.5;
+
         determineTruckState();
     }
 
