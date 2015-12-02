@@ -22,6 +22,9 @@ public class TruckTrackerService extends Service implements SensorEventListener 
             = TruckTrackerService.class.getPackage().getName() + "TRUCK_STATE";
     static final String TRUCK_STATE_EXTRA = "truckState";
 
+    private float accelerationThreshold = 10.0f;
+    private float speedThreshold = 10.0f;
+
     private SensorManager sensorManager;
     private TruckState truckState;
     private boolean truckLoaded;
@@ -48,7 +51,7 @@ public class TruckTrackerService extends Service implements SensorEventListener 
             LocationResult locationResult = LocationResult.extractResult(intent);
             Location location = locationResult.getLastLocation();
 
-            truckMoving = location.hasSpeed();
+            truckMoving = location.hasSpeed() && location.getSpeed() >= speedThreshold;
 
             if (deviceAccelerating != null) {
                 determineTruckState();
@@ -80,7 +83,7 @@ public class TruckTrackerService extends Service implements SensorEventListener 
         float absY = Math.abs(y);
         float absZ = Math.abs(z);
 
-        deviceAccelerating = absX >= 0.5 || absY >= 0.5 || absZ >= 0.5;
+        deviceAccelerating = absX >= accelerationThreshold || absY >= accelerationThreshold || absZ >= accelerationThreshold;
 
         if (truckMoving != null) {
             determineTruckState();
@@ -126,5 +129,13 @@ public class TruckTrackerService extends Service implements SensorEventListener 
         TruckTrackerService truckTrackerService() {
             return TruckTrackerService.this;
         }
+    }
+
+    void setAccelerationThreshold(float threshold) {
+        accelerationThreshold = threshold;
+    }
+
+    void setSpeedThreshold(float speed) {
+        speedThreshold = speed;
     }
 }
