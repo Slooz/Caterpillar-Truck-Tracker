@@ -17,10 +17,14 @@ import com.google.android.gms.location.LocationResult;
 
 public class TruckTrackerService extends Service implements SensorEventListener {
     private SensorManager sensorManager;
+    private TruckState truckState;
+    private boolean truckMoving;
+    private boolean deviceAccelerating;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        truckState = TruckState.UNKNOWN;
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor linearAcceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         sensorManager
@@ -32,7 +36,8 @@ public class TruckTrackerService extends Service implements SensorEventListener 
         if (LocationResult.hasResult(intent)) {
             LocationResult locationResult = LocationResult.extractResult(intent);
             Location location = locationResult.getLastLocation();
-            boolean truckMoving = location.hasSpeed();
+            truckMoving = location.hasSpeed();
+            determineTruckState();
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -56,10 +61,19 @@ public class TruckTrackerService extends Service implements SensorEventListener 
         float absX = Math.abs(x);
         float absY = Math.abs(y);
         float absZ = Math.abs(z);
-        boolean deviceAccelerating = absX >= 0.5 || absY >= 0.5 || absZ >= 0.5;
+        deviceAccelerating = absX >= 0.5 || absY >= 0.5 || absZ >= 0.5;
+        determineTruckState();
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
+
+    private void determineTruckState() {
+        if (truckMoving) {
+            truckState = TruckState.MOVING;
+        }
+    }
+
+    private enum TruckState {STOPPED, MOVING, LOADING, UNLOADING, UNKNOWN}
 }
