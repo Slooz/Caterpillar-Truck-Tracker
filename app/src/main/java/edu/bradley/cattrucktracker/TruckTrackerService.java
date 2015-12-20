@@ -48,10 +48,14 @@ public class TruckTrackerService extends Service implements SensorEventListener 
             LocationResult locationResult = LocationResult.extractResult(intent);
             Location location = locationResult.getLastLocation();
 
-            truckMoving = location.hasSpeed();
+            if (!location.hasSpeed()) {
+                truckMoving = null;
+            } else {
+                truckMoving = location.getSpeed() > 0;
 
-            if (deviceAccelerating != null) {
-                determineTruckState();
+                if (deviceAccelerating != null) {
+                    determineTruckState();
+                }
             }
         }
 
