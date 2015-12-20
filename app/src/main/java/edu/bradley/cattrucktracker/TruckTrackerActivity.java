@@ -42,7 +42,6 @@ public class TruckTrackerActivity extends Activity implements GoogleApiClient.Co
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
         }
     };
 
