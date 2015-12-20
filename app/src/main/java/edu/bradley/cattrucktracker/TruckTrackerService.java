@@ -76,18 +76,22 @@ public class TruckTrackerService extends Service implements SensorEventListener 
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float x = event.values[0];
-        float y = event.values[1];
-        float z = event.values[2];
+        if (event.accuracy == SensorManager.SENSOR_STATUS_ACCURACY_HIGH) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
 
-        float absX = Math.abs(x);
-        float absY = Math.abs(y);
-        float absZ = Math.abs(z);
+            float absX = Math.abs(x);
+            float absY = Math.abs(y);
+            float absZ = Math.abs(z);
 
-        deviceAccelerating = absX >= 0.5 || absY >= 0.5 || absZ >= 0.5;
+            deviceAccelerating = absX >= 0.5 || absY >= 0.5 || absZ >= 0.5;
 
-        if (truckMoving != null) {
-            determineTruckState();
+            if (truckMoving != null) {
+                determineTruckState();
+            }
+        } else {
+            deviceAccelerating = null;
         }
     }
 
