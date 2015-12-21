@@ -74,6 +74,8 @@ public class TruckTrackerActivity extends Activity implements GoogleApiClient.Co
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         truckTrackerServiceIntent = new Intent(this, TruckTrackerService.class);
+
+        setContentView(R.layout.cat_truck_tracker_layout);
     }
 
     @Override
