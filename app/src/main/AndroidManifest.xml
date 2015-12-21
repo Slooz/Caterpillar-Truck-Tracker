@@ -10,7 +10,8 @@
     <application
         android:allowBackup="false"
         android:icon="@mipmap/launch_icon"
-        android:label="CAT Truck Tracker">
+        android:label="CAT Truck Tracker"
+        android:theme="@style/catStyle">
 
         <activity android:name="edu.bradley.cattrucktracker.TruckTrackerActivity">
             <intent-filter>
