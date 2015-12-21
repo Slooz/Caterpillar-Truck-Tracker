@@ -15,6 +15,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -26,6 +27,11 @@ public class TruckTrackerActivity extends Activity implements GoogleApiClient.Co
         public void onReceive(Context context, Intent intent) {
             TruckTrackerService.TruckState truckState = (TruckTrackerService.TruckState) intent
                     .getSerializableExtra(TruckTrackerService.TRUCK_STATE_EXTRA);
+            TextView truckStateTextView = (TextView) findViewById(R.id.truck_state_text_view);
+            String truckStateString = truckState.name();
+            String formattedTruckStateString = truckStateString.substring(0, 1)
+                    + truckStateString.substring(1).toLowerCase();
+            truckStateTextView.setText(formattedTruckStateString);
         }
     };
     private GoogleApiClient googleApiClient;
