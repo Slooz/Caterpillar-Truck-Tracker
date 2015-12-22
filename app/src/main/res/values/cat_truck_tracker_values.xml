@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright 2015 Nathan Clark, Krzysztof Czelusniak, Michael Holwey, Dakota Leonard
+  -->
+
+<resources>
+    <string name="start_button_text">START</string>
+</resources>
