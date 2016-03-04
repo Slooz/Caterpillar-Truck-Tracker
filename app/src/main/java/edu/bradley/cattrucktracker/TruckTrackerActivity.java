@@ -6,36 +6,18 @@ package edu.bradley.cattrucktracker;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
-import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 public class TruckTrackerActivity extends Activity implements GoogleApiClient.ConnectionCallbacks {
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            TruckTrackerService.TruckState truckState = (TruckTrackerService.TruckState) intent
-                    .getSerializableExtra(TruckTrackerService.TRUCK_STATE_EXTRA);
-            TextView truckStateTextView = (TextView) findViewById(R.id.truck_state_text_view);
-            String truckStateString = truckState.name();
-            String formattedTruckStateString = truckStateString.substring(0, 1)
-                    + truckStateString.substring(1).toLowerCase();
-            truckStateTextView.setText(formattedTruckStateString);
-        }
-    };
     private GoogleApiClient googleApiClient;
-    private LocalBroadcastManager localBroadcastManager;
     private Intent truckTrackerServiceIntent;
     private TruckTrackerService truckTrackerService;
     private final ServiceConnection truckTrackerServiceConnection = new ServiceConnection() {
@@ -77,11 +59,7 @@ public class TruckTrackerActivity extends Activity implements GoogleApiClient.Co
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API).addConnectionCallbacks(this).build();
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
-
         truckTrackerServiceIntent = new Intent(this, TruckTrackerService.class);
-
-        setContentView(R.layout.cat_truck_tracker_layout);
     }
 
     @Override
@@ -90,18 +68,12 @@ public class TruckTrackerActivity extends Activity implements GoogleApiClient.Co
 
         googleApiClient.connect();
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(TruckTrackerService.TRUCK_STATE_BROADCAST_ACTION);
-        localBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
-
         bindService(truckTrackerServiceIntent, truckTrackerServiceConnection, 0);
     }
 
     @Override
     protected void onStop() {
         unbindService(truckTrackerServiceConnection);
-
-        localBroadcastManager.unregisterReceiver(broadcastReceiver);
 
         googleApiClient.disconnect();
 
