@@ -11,7 +11,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.os.Binder;
 import android.os.IBinder;
 
 import com.google.android.gms.location.LocationResult;
@@ -66,7 +65,7 @@ public class TruckTrackerService extends Service implements SensorEventListener 
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new TruckTrackerServiceBinder();
+        return null;
     }
 
     @Override
@@ -113,10 +112,4 @@ public class TruckTrackerService extends Service implements SensorEventListener 
     }
 
     enum TruckState {STOPPED, MOVING, LOADING, UNLOADING, UNKNOWN}
-
-    class TruckTrackerServiceBinder extends Binder {
-        TruckTrackerService truckTrackerService() {
-            return TruckTrackerService.this;
-        }
-    }
 }
