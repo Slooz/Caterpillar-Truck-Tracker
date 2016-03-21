@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Nathan Clark, Krzysztof Czelusniak, Michael Holwey, Dakota Leonard
+ * Copyright 2016 Nathan Clark, Krzysztof Czelusniak, Michael Holwey, Dakota Leonard
  */
 
 package edu.bradley.cattrucktracker;
