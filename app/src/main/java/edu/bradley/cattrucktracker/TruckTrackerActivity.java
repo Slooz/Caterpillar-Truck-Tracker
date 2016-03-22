@@ -11,7 +11,6 @@ import android.os.Bundle;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 public class TruckTrackerActivity extends Activity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
