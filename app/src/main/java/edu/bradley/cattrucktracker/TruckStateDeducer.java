@@ -26,13 +26,14 @@ import microsoft.aspnet.signalr.client.hubs.HubProxy;
 
 public class TruckStateDeducer
         implements SensorEventListener, LocationListener, GoogleApiClient.ConnectionCallbacks {
+    private final GoogleApiClient googleApiClient;
+    private final HubProxy hubProxy;
+    private final String serialNumber = "0";
+
     private TruckState truckState = TruckState.UNKNOWN;
     private boolean truckLoaded = false;
     private Boolean truckMoving;
     private Boolean deviceAccelerating;
-    private GoogleApiClient googleApiClient;
-    private HubProxy hubProxy;
-    private String serialNumber = "0";
 
     TruckStateDeducer(SensorManager sensorManager, GoogleApiClient.Builder googleApiClientBuilder)
             throws ExecutionException, InterruptedException {
