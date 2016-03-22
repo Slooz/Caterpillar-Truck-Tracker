@@ -51,6 +51,8 @@ public class TruckStateDeducer
         hubProxy = hubConnection.createHubProxy("SensorHub");
         SignalRFuture<Void> signalRFuture = hubConnection.start();
         signalRFuture.get();
+
+        reportTruckState();
     }
 
     @Override
@@ -131,9 +133,13 @@ public class TruckStateDeducer
         }
 
         if (oldTruckState != truckState) {
-            long currentTime = System.currentTimeMillis();
-            hubProxy.invoke("PostStateChange", truckState, currentTime, serialNumber);
+            reportTruckState();
         }
+    }
+
+    private void reportTruckState() {
+        long currentTime = System.currentTimeMillis();
+        hubProxy.invoke("PostStateChange", truckState, currentTime, serialNumber);
     }
 
     enum TruckState {UNKNOWN, MOVING, STOPPED, LOADING, MOVING_DUMP, STATIC_DUMP}
