@@ -114,7 +114,7 @@ public class TruckStateDeducer
 
         if (truckState == TruckState.STOPPED && deviceAccelerating) {
             if (truckLoaded) {
-                truckState = TruckState.UNLOADING;
+                truckState = TruckState.STATIC_DUMP;
                 truckLoaded = false;
             } else {
                 truckState = TruckState.LOADING;
@@ -123,5 +123,5 @@ public class TruckStateDeducer
         }
     }
 
-    enum TruckState {STOPPED, MOVING, LOADING, UNLOADING, UNKNOWN}
+    enum TruckState {UNKNOWN, MOVING, STOPPED, LOADING, MOVING_DUMP, STATIC_DUMP}
 }
