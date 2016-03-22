@@ -125,6 +125,8 @@ public class TruckStateDeducer
         }
 
         if (oldTruckState != truckState) {
+            long currentTime = System.currentTimeMillis();
+            hubProxy.invoke("PostStateChange", truckState, currentTime, "0");
         }
     }
 
