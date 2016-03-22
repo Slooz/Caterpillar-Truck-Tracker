@@ -26,8 +26,8 @@ import microsoft.aspnet.signalr.client.hubs.HubProxy;
 
 public class TruckStateDeducer
         implements SensorEventListener, LocationListener, GoogleApiClient.ConnectionCallbacks {
-    private TruckState truckState;
-    private boolean truckLoaded;
+    private TruckState truckState = TruckState.UNKNOWN;
+    private boolean truckLoaded = false;
     private Boolean truckMoving;
     private Boolean deviceAccelerating;
     private GoogleApiClient googleApiClient;
@@ -36,9 +36,6 @@ public class TruckStateDeducer
 
     TruckStateDeducer(SensorManager sensorManager, GoogleApiClient.Builder googleApiClientBuilder)
             throws ExecutionException, InterruptedException {
-        truckState = TruckState.UNKNOWN;
-        truckLoaded = false;
-
         Sensor linearAcceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         sensorManager
                 .registerListener(this, linearAcceleration, SensorManager.SENSOR_DELAY_FASTEST);
