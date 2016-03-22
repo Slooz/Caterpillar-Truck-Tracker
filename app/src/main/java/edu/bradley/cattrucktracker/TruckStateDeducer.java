@@ -41,8 +41,9 @@ public class TruckStateDeducer
         sensorManager
                 .registerListener(this, linearAcceleration, SensorManager.SENSOR_DELAY_FASTEST);
 
-        googleApiClient = googleApiClientBuilder
-                .addApi(LocationServices.API).addConnectionCallbacks(this).build();
+        googleApiClientBuilder
+                = googleApiClientBuilder.addApi(LocationServices.API).addConnectionCallbacks(this);
+        googleApiClient = googleApiClientBuilder.build();
         googleApiClient.connect();
 
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
