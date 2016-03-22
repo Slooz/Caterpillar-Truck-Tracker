@@ -48,7 +48,7 @@ public class TruckStateDeducer
             float absY = Math.abs(y);
             float absZ = Math.abs(z);
 
-            deviceAccelerating = absX >= 0.5 || absY >= 0.5 || absZ >= 0.5;
+            deviceAccelerating = absX >= 0.1 || absY >= 0.1 || absZ >= 0.1;
 
             if (truckMoving != null) {
                 determineTruckState();
