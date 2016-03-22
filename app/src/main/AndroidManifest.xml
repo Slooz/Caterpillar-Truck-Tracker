@@ -19,8 +19,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".TruckTrackerService" />
-
     </application>
 
 </manifest>

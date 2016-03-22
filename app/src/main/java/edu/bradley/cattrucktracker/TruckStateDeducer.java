@@ -4,68 +4,37 @@
 
 package edu.bradley.cattrucktracker;
 
-import android.app.Service;
-import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.os.IBinder;
+import android.os.Bundle;
 
-import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
-public class TruckTrackerService extends Service implements SensorEventListener {
-    private SensorManager sensorManager;
+public class TruckStateDeducer
+        implements SensorEventListener, LocationListener, GoogleApiClient.ConnectionCallbacks {
     private TruckState truckState;
     private boolean truckLoaded;
     private Boolean truckMoving;
     private Boolean deviceAccelerating;
+    private GoogleApiClient googleApiClient;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
+    TruckStateDeducer(SensorManager sensorManager, GoogleApiClient.Builder googleApiClientBuilder) {
         truckState = TruckState.UNKNOWN;
         truckLoaded = false;
 
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor linearAcceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-
         sensorManager
                 .registerListener(this, linearAcceleration, SensorManager.SENSOR_DELAY_FASTEST);
-    }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (LocationResult.hasResult(intent)) {
-            LocationResult locationResult = LocationResult.extractResult(intent);
-            Location location = locationResult.getLastLocation();
-
-            if (location.hasSpeed()) {
-                truckMoving = location.getSpeed() > 0;
-
-                if (deviceAccelerating != null) {
-                    determineTruckState();
-                }
-            } else {
-                truckMoving = null;
-            }
-        }
-
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onDestroy() {
-        sensorManager.unregisterListener(this);
-
-        super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+        googleApiClient = googleApiClientBuilder
+                .addApi(LocationServices.API).addConnectionCallbacks(this).build();
+        googleApiClient.connect();
     }
 
     @Override
@@ -91,6 +60,32 @@ public class TruckTrackerService extends Service implements SensorEventListener 
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        LocationRequest locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(0);
+
+        LocationServices.FusedLocationApi
+                .requestLocationUpdates(googleApiClient, locationRequest, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location.hasSpeed()) {
+            truckMoving = location.getSpeed() > 0;
+
+            if (deviceAccelerating != null) {
+                determineTruckState();
+            }
+        } else {
+            truckMoving = null;
+        }
     }
 
     private void determineTruckState() {
