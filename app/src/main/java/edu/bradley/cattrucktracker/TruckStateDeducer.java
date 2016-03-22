@@ -32,6 +32,7 @@ public class TruckStateDeducer
     private Boolean deviceAccelerating;
     private GoogleApiClient googleApiClient;
     private HubProxy hubProxy;
+    private String serialNumber = "0";
 
     TruckStateDeducer(SensorManager sensorManager, GoogleApiClient.Builder googleApiClientBuilder)
             throws ExecutionException, InterruptedException {
@@ -94,8 +95,11 @@ public class TruckStateDeducer
 
     @Override
     public void onLocationChanged(Location location) {
+        Float speed = null;
+
         if (location.hasSpeed()) {
-            truckMoving = location.getSpeed() > 0;
+            speed = location.getSpeed();
+            truckMoving = speed > 0;
 
             if (deviceAccelerating != null) {
                 determineTruckState();
@@ -103,6 +107,10 @@ public class TruckStateDeducer
         } else {
             truckMoving = null;
         }
+
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        hubProxy.invoke("PostGeo", serialNumber, latitude, longitude, speed);
     }
 
     private void determineTruckState() {
@@ -126,7 +134,7 @@ public class TruckStateDeducer
 
         if (oldTruckState != truckState) {
             long currentTime = System.currentTimeMillis();
-            hubProxy.invoke("PostStateChange", truckState, currentTime, "0");
+            hubProxy.invoke("PostStateChange", truckState, currentTime, serialNumber);
         }
     }
 
