@@ -12,7 +12,9 @@
         android:icon="@mipmap/launch_icon"
         android:label="CAT Truck Tracker">
 
-        <activity android:name="edu.bradley.cattrucktracker.TruckTrackerActivity">
+        <activity
+            android:name="edu.bradley.cattrucktracker.TruckTrackerActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
