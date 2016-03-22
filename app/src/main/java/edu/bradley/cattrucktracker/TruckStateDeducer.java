@@ -106,6 +106,8 @@ public class TruckStateDeducer
     }
 
     private void determineTruckState() {
+        TruckState oldTruckState = truckState;
+
         if (truckMoving) {
             truckState = TruckState.MOVING;
         } else if (truckState == TruckState.MOVING || truckState == TruckState.UNKNOWN) {
@@ -120,6 +122,9 @@ public class TruckStateDeducer
                 truckState = TruckState.LOADING;
                 truckLoaded = true;
             }
+        }
+
+        if (oldTruckState != truckState) {
         }
     }
 
