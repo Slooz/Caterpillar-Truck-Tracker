@@ -16,6 +16,14 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.concurrent.ExecutionException;
+
+import microsoft.aspnet.signalr.client.Platform;
+import microsoft.aspnet.signalr.client.SignalRFuture;
+import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
+import microsoft.aspnet.signalr.client.hubs.HubConnection;
+import microsoft.aspnet.signalr.client.hubs.HubProxy;
+
 public class TruckStateDeducer
         implements SensorEventListener, LocationListener, GoogleApiClient.ConnectionCallbacks {
     private TruckState truckState;
@@ -23,8 +31,10 @@ public class TruckStateDeducer
     private Boolean truckMoving;
     private Boolean deviceAccelerating;
     private GoogleApiClient googleApiClient;
+    private HubProxy hubProxy;
 
-    TruckStateDeducer(SensorManager sensorManager, GoogleApiClient.Builder googleApiClientBuilder) {
+    TruckStateDeducer(SensorManager sensorManager, GoogleApiClient.Builder googleApiClientBuilder)
+            throws ExecutionException, InterruptedException {
         truckState = TruckState.UNKNOWN;
         truckLoaded = false;
 
@@ -35,6 +45,13 @@ public class TruckStateDeducer
         googleApiClient = googleApiClientBuilder
                 .addApi(LocationServices.API).addConnectionCallbacks(this).build();
         googleApiClient.connect();
+
+        Platform.loadPlatformComponent(new AndroidPlatformComponent());
+        HubConnection hubConnection
+                = new HubConnection("http://bradley-capstone-app.azurewebsites.net");
+        hubProxy = hubConnection.createHubProxy("SensorHub");
+        SignalRFuture<Void> signalRFuture = hubConnection.start();
+        signalRFuture.get();
     }
 
     @Override

@@ -18,6 +18,10 @@ public class TruckTrackerActivity extends Activity {
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         GoogleApiClient.Builder googleApiClient = new GoogleApiClient.Builder(this);
-        new TruckStateDeducer(sensorManager, googleApiClient);
+        try {
+            new TruckStateDeducer(sensorManager, googleApiClient);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }
