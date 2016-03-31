@@ -22,5 +22,7 @@ public class TruckTrackerActivity extends Activity {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+
+        finish();
     }
 }
