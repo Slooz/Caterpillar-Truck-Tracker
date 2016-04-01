@@ -24,7 +24,7 @@ import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
 
-public class TruckStateDeducer
+class TruckStateDeducer
         implements SensorEventListener, LocationListener, GoogleApiClient.ConnectionCallbacks {
     private final GoogleApiClient googleApiClient;
     private final HubProxy hubProxy;
