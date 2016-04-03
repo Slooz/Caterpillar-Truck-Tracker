@@ -15,13 +15,20 @@ public class TruckTrackerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        GoogleApiClient.Builder googleApiClient = new GoogleApiClient.Builder(this);
+        BackEnd backEnd = null;
         try {
-            new TruckStateDeducer(sensorManager, googleApiClient);
+            backEnd = new BackEnd();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+
+        TruckState truckState = new TruckState(backEnd);
+
+        GoogleApiClient.Builder googleApiClientBuilder = new GoogleApiClient.Builder(this);
+        new Gps(googleApiClientBuilder, truckState, backEnd);
+
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        new Accelerometer(sensorManager, truckState);
 
         finish();
     }
