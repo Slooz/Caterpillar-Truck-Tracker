@@ -6,6 +6,7 @@
     package="edu.bradley.cattrucktracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
         android:allowBackup="false"
