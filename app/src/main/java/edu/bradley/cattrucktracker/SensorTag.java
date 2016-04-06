@@ -12,14 +12,15 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 
 class SensorTag {
-    private final BluetoothGatt bluetoothGatt;
-
     SensorTag(Context context) {
         BluetoothManager bluetoothManager
                 = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         BluetoothDevice bluetoothDevice = bluetoothAdapter.getRemoteDevice("B0:B4:48:BE:67:82");
-        bluetoothGatt = bluetoothDevice.connectGatt(context, true, new BluetoothGattCallback() {
+        bluetoothDevice.connectGatt(context, true, new BluetoothGattCallback() {
+            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+                gatt.discoverServices();
+            }
         });
     }
 }
