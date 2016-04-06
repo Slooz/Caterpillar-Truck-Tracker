@@ -5,6 +5,8 @@
 package edu.bradley.cattrucktracker;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
@@ -29,6 +31,10 @@ public class TruckTrackerActivity extends Activity {
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         new Accelerometer(sensorManager, truckState);
+
+        BluetoothManager bluetoothManager
+                = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        new SensorTag(bluetoothManager);
 
         finish();
     }
