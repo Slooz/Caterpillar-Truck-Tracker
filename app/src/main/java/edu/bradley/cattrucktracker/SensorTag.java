@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -26,8 +27,11 @@ class SensorTag {
             }
 
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                UUID uuid = UUID.fromString("f000aa80-0451-4000-b000-000000000000");
-                BluetoothGattService bluetoothGattService = gatt.getService(uuid);
+                UUID serviceUuid = UUID.fromString("f000aa80-0451-4000-b000-000000000000");
+                BluetoothGattService bluetoothGattService = gatt.getService(serviceUuid);
+                UUID characteristicUuid = UUID.fromString("f000aa81-0451-4000-b000-000000000000");
+                BluetoothGattCharacteristic bluetoothGattCharacteristic
+                        = bluetoothGattService.getCharacteristic(characteristicUuid);
             }
         });
     }
