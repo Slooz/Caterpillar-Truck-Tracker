@@ -4,9 +4,11 @@
 
 package edu.bradley.cattrucktracker;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 
 class SensorTag {
     SensorTag(BluetoothManager bluetoothManager) {
+        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
     }
 }
