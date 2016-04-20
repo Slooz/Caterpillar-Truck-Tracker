@@ -92,6 +92,22 @@ class SensorTag {
                 byte gyroscopeZSecondByte = movementData[5];
                 double gyroscopeZ = convertRawDatum
                         (gyroscopeZFirstByte, gyroscopeZSecondByte, gyroscopeRange);
+
+                int accelerometerRange = 2;
+                byte accelerometerXFirstByte = movementData[6];
+                byte accelerometerXSecondByte = movementData[7];
+                double accelerometerX = convertRawDatum
+                        (accelerometerXFirstByte, accelerometerXSecondByte, accelerometerRange);
+
+                byte accelerometerYFirstByte = movementData[8];
+                byte accelerometerYSecondByte = movementData[9];
+                double accelerometerY = convertRawDatum
+                        (accelerometerYFirstByte, accelerometerYSecondByte, accelerometerRange);
+
+                byte accelerometerZFirstByte = movementData[10];
+                byte accelerometerZSecondByte = movementData[11];
+                double accelerometerZ = convertRawDatum
+                        (accelerometerZFirstByte, accelerometerZSecondByte, accelerometerRange);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
@@ -103,10 +119,14 @@ class SensorTag {
                 return UUID.fromString("f000aa83-0451-4000-b000-000000000000");
             }
 
-            private double convertRawDatum(byte firstRawByte, byte secondRawByte, int range) {
+            private double wordToDouble(byte firstByte, byte secondByte) {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN)
-                        .put(firstRawByte).put(secondRawByte);
-                short rawDatum = byteBuffer.getShort(0);
+                        .put(firstByte).put(secondByte);
+                return (double)byteBuffer.getShort(0);
+            }
+
+            private double convertRawDatum(byte firstRawByte, byte secondRawByte, int range) {
+                double rawDatum = wordToDouble(firstRawByte, secondRawByte);
 
                 int signedShortValueCount = Short.MAX_VALUE + 1;
                 double rawDatumValueCount = signedShortValueCount / range;
