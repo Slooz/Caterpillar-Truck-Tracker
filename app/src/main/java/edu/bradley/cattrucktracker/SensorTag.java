@@ -54,6 +54,11 @@ class SensorTag {
                 gatt.writeDescriptor(notificationDescriptor);
             }
 
+            @Override
+            public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor,
+                                          int status) {
+            }
+
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
                 UUID serviceUuid = UUID.fromString("f000aa80-0451-4000-b000-000000000000");
                 return bluetoothGatt.getService(serviceUuid);
