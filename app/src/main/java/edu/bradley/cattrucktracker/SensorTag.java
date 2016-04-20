@@ -31,7 +31,7 @@ class SensorTag {
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 BluetoothGattService movementService = getMovementService(gatt);
-                UUID periodUuid = UUID.fromString("f000aa83-0451-4000-b000-000000000000");
+                UUID periodUuid = getPeriodUuid();
                 BluetoothGattCharacteristic periodCharacteristic
                         = movementService.getCharacteristic(periodUuid);
                 periodCharacteristic.setValue(new byte[]{0x0A});
@@ -42,16 +42,21 @@ class SensorTag {
             public void onCharacteristicWrite(BluetoothGatt gatt,
                                               BluetoothGattCharacteristic characteristic,
                                               int status) {
-                BluetoothGattService movementService = getMovementService(gatt);
-                UUID dataUuid = UUID.fromString("f000aa81-0451-4000-b000-000000000000");
-                BluetoothGattCharacteristic dataCharacteristic
-                        = movementService.getCharacteristic(dataUuid);
-                gatt.setCharacteristicNotification(dataCharacteristic, true);
-                UUID notificationUuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-                BluetoothGattDescriptor notificationDescriptor
-                        = dataCharacteristic.getDescriptor(notificationUuid);
-                notificationDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                gatt.writeDescriptor(notificationDescriptor);
+                UUID characteristicWrittenTo = characteristic.getUuid();
+                UUID periodUuid = getPeriodUuid();
+                if (characteristicWrittenTo.equals(periodUuid)) {
+                    BluetoothGattService movementService = getMovementService(gatt);
+                    UUID dataUuid = UUID.fromString("f000aa81-0451-4000-b000-000000000000");
+                    BluetoothGattCharacteristic dataCharacteristic
+                            = movementService.getCharacteristic(dataUuid);
+                    gatt.setCharacteristicNotification(dataCharacteristic, true);
+                    UUID notificationUuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+                    BluetoothGattDescriptor notificationDescriptor
+                            = dataCharacteristic.getDescriptor(notificationUuid);
+                    notificationDescriptor
+                            .setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    gatt.writeDescriptor(notificationDescriptor);
+                }
             }
 
             @Override
@@ -68,6 +73,10 @@ class SensorTag {
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
                 UUID serviceUuid = UUID.fromString("f000aa80-0451-4000-b000-000000000000");
                 return bluetoothGatt.getService(serviceUuid);
+            }
+
+            private UUID getPeriodUuid() {
+                return UUID.fromString("f000aa83-0451-4000-b000-000000000000");
             }
         });
     }
