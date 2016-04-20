@@ -20,7 +20,7 @@ class SensorTag {
         BluetoothManager bluetoothManager
                 = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        BluetoothDevice bluetoothDevice = bluetoothAdapter.getRemoteDevice("B0:B4:48:C0:4C:82");
+        BluetoothDevice bluetoothDevice = bluetoothAdapter.getRemoteDevice("B0:B4:48:C0:4C:85");
         BluetoothGatt x = bluetoothDevice.connectGatt(context, true, new BluetoothGattCallback() {
             public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
                 gatt.discoverServices();
