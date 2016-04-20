@@ -70,6 +70,11 @@ class SensorTag {
                 gatt.writeCharacteristic(configurationCharacteristic);
             }
 
+            @Override
+            public void onCharacteristicChanged(BluetoothGatt gatt,
+                                                BluetoothGattCharacteristic characteristic) {
+            }
+
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
                 UUID serviceUuid = UUID.fromString("f000aa80-0451-4000-b000-000000000000");
                 return bluetoothGatt.getService(serviceUuid);
