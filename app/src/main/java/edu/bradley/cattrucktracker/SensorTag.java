@@ -51,6 +51,7 @@ class SensorTag {
                 BluetoothGattDescriptor notificationDescriptor
                         = dataCharacteristic.getDescriptor(notificationUuid);
                 notificationDescriptor.setValue(new byte[]{0x00, 0x01});
+                gatt.writeDescriptor(notificationDescriptor);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
