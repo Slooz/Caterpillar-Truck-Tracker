@@ -30,7 +30,7 @@ public class TruckTrackerActivity extends Activity {
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         new Accelerometer(sensorManager, truckState);
 
-        new SensorTag(this);
+        new SensorTag(this, backEnd);
 
         finish();
     }

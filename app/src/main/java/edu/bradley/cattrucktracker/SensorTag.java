@@ -19,7 +19,9 @@ import java.nio.ByteOrder;
 import java.util.UUID;
 
 class SensorTag {
-    SensorTag(Context context) {
+    private final BackEnd backEnd;
+
+    SensorTag(Context context, final BackEnd backEnd) {
         BluetoothManager bluetoothManager
                 = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
@@ -123,6 +125,10 @@ class SensorTag {
                 byte magnetometerZSecondByte = movementData[17];
                 double magnetometerZ
                         = wordToDouble(magnetometerZFirstByte, magnetometerZSecondByte);
+
+                backEnd.sendSensorTagMovementData(gyroscopeX, gyroscopeY, gyroscopeZ,
+                        accelerometerX, accelerometerY, accelerometerZ, magnetometerX,
+                        magnetometerY, magnetometerZ);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
@@ -137,7 +143,7 @@ class SensorTag {
             private double wordToDouble(byte firstByte, byte secondByte) {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN)
                         .put(firstByte).put(secondByte);
-                return (double)byteBuffer.getShort(0);
+                return (double) byteBuffer.getShort(0);
             }
 
             private double convertRawDatum(byte firstRawByte, byte secondRawByte, int range) {
@@ -149,5 +155,7 @@ class SensorTag {
                 return rawDatum / rawDatumValueCount;
             }
         });
+
+        this.backEnd = backEnd;
     }
 }
