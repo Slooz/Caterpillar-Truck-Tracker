@@ -14,6 +14,8 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.UUID;
 
 class SensorTag {
@@ -74,6 +76,22 @@ class SensorTag {
             public void onCharacteristicChanged(BluetoothGatt gatt,
                                                 BluetoothGattCharacteristic characteristic) {
                 byte[] movementData = characteristic.getValue();
+
+                int gyroscopeRange = 250;
+                byte gyroscopeXFirstByte = movementData[0];
+                byte gyroscopeXSecondByte = movementData[1];
+                double gyroscopeX = convertRawDatum
+                        (gyroscopeXFirstByte, gyroscopeXSecondByte, gyroscopeRange);
+
+                byte gyroscopeYFirstByte = movementData[2];
+                byte gyroscopeYSecondByte = movementData[3];
+                double gyroscopeY = convertRawDatum
+                        (gyroscopeYFirstByte, gyroscopeYSecondByte, gyroscopeRange);
+
+                byte gyroscopeZFirstByte = movementData[4];
+                byte gyroscopeZSecondByte = movementData[5];
+                double gyroscopeZ = convertRawDatum
+                        (gyroscopeZFirstByte, gyroscopeZSecondByte, gyroscopeRange);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
@@ -83,6 +101,17 @@ class SensorTag {
 
             private UUID getPeriodUuid() {
                 return UUID.fromString("f000aa83-0451-4000-b000-000000000000");
+            }
+
+            private double convertRawDatum(byte firstRawByte, byte secondRawByte, int range) {
+                ByteBuffer byteBuffer = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN)
+                        .put(firstRawByte).put(secondRawByte);
+                short rawDatum = byteBuffer.getShort(0);
+
+                int signedShortValueCount = Short.MAX_VALUE + 1;
+                double rawDatumValueCount = signedShortValueCount / range;
+
+                return rawDatum / rawDatumValueCount;
             }
         });
     }
