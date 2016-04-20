@@ -43,7 +43,9 @@ class SensorTag {
                                               int status) {
                 BluetoothGattService movementService = getMovementService(gatt);
                 UUID dataUuid = UUID.fromString("f000aa81-0451-4000-b000-000000000000");
-                BluetoothGattCharacteristic dataCharacteristic = movementService.getCharacteristic(dataUuid);
+                BluetoothGattCharacteristic dataCharacteristic
+                        = movementService.getCharacteristic(dataUuid);
+                gatt.setCharacteristicNotification(dataCharacteristic, true);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
