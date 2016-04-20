@@ -29,11 +29,10 @@ class SensorTag {
 
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                UUID serviceUuid = UUID.fromString("f000aa80-0451-4000-b000-000000000000");
-                BluetoothGattService bluetoothGattService = gatt.getService(serviceUuid);
+                BluetoothGattService movementService = getMovementService(gatt);
                 UUID periodUuid = UUID.fromString("f000aa83-0451-4000-b000-000000000000");
                 BluetoothGattCharacteristic periodCharacteristic
-                        = bluetoothGattService.getCharacteristic(periodUuid);
+                        = movementService.getCharacteristic(periodUuid);
                 periodCharacteristic.setValue(new byte[]{0x0A});
                 gatt.writeCharacteristic(periodCharacteristic);
             }
@@ -42,6 +41,14 @@ class SensorTag {
             public void onCharacteristicWrite(BluetoothGatt gatt,
                                               BluetoothGattCharacteristic characteristic,
                                               int status) {
+                BluetoothGattService movementService = getMovementService(gatt);
+                UUID dataUuid = UUID.fromString("f000aa81-0451-4000-b000-000000000000");
+                BluetoothGattCharacteristic dataCharacteristic = movementService.getCharacteristic(dataUuid);
+            }
+
+            private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
+                UUID serviceUuid = UUID.fromString("f000aa80-0451-4000-b000-000000000000");
+                return bluetoothGatt.getService(serviceUuid);
             }
         });
     }
