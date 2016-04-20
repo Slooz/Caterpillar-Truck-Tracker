@@ -33,6 +33,7 @@ class SensorTag {
                 BluetoothGattCharacteristic periodCharacteristic
                         = bluetoothGattService.getCharacteristic(periodUuid);
                 periodCharacteristic.setValue(new byte[]{0x0A});
+                gatt.writeCharacteristic(periodCharacteristic);
             }
         });
     }
