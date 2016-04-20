@@ -22,10 +22,12 @@ class SensorTag {
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         BluetoothDevice bluetoothDevice = bluetoothAdapter.getRemoteDevice("B0:B4:48:C0:4C:85");
         bluetoothDevice.connectGatt(context, true, new BluetoothGattCallback() {
+            @Override
             public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
                 gatt.discoverServices();
             }
 
+            @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 UUID serviceUuid = UUID.fromString("f000aa80-0451-4000-b000-000000000000");
                 BluetoothGattService bluetoothGattService = gatt.getService(serviceUuid);
@@ -34,6 +36,12 @@ class SensorTag {
                         = bluetoothGattService.getCharacteristic(periodUuid);
                 periodCharacteristic.setValue(new byte[]{0x0A});
                 gatt.writeCharacteristic(periodCharacteristic);
+            }
+
+            @Override
+            public void onCharacteristicWrite(BluetoothGatt gatt,
+                                              BluetoothGattCharacteristic characteristic,
+                                              int status) {
             }
         });
     }
