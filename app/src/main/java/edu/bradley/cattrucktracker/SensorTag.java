@@ -62,6 +62,7 @@ class SensorTag {
                 BluetoothGattCharacteristic configurationCharacteristic
                         = movementService.getCharacteristic(configurationUuid);
                 configurationCharacteristic.setValue(new byte[]{0x7F, 0x00});
+                gatt.writeCharacteristic(configurationCharacteristic);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
