@@ -108,6 +108,21 @@ class SensorTag {
                 byte accelerometerZSecondByte = movementData[11];
                 double accelerometerZ = convertRawDatum
                         (accelerometerZFirstByte, accelerometerZSecondByte, accelerometerRange);
+
+                byte magnetometerXFirstByte = movementData[12];
+                byte magnetometerXSecondByte = movementData[13];
+                double magnetometerX
+                        = wordToDouble(magnetometerXFirstByte, magnetometerXSecondByte);
+
+                byte magnetometerYFirstByte = movementData[14];
+                byte magnetometerYSecondByte = movementData[15];
+                double magnetometerY
+                        = wordToDouble(magnetometerYFirstByte, magnetometerYSecondByte);
+
+                byte magnetometerZFirstByte = movementData[16];
+                byte magnetometerZSecondByte = movementData[17];
+                double magnetometerZ
+                        = wordToDouble(magnetometerZFirstByte, magnetometerZSecondByte);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
