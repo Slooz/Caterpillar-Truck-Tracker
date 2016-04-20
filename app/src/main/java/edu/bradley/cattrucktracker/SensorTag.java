@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -46,6 +47,9 @@ class SensorTag {
                 BluetoothGattCharacteristic dataCharacteristic
                         = movementService.getCharacteristic(dataUuid);
                 gatt.setCharacteristicNotification(dataCharacteristic, true);
+                UUID notificationUuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+                BluetoothGattDescriptor notificationDescriptor
+                        = dataCharacteristic.getDescriptor(notificationUuid);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
