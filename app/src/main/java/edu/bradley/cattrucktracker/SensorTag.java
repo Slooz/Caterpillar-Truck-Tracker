@@ -73,6 +73,7 @@ class SensorTag {
             @Override
             public void onCharacteristicChanged(BluetoothGatt gatt,
                                                 BluetoothGattCharacteristic characteristic) {
+                byte[] movementData = characteristic.getValue();
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
