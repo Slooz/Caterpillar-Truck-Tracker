@@ -50,7 +50,7 @@ class SensorTag {
                 UUID notificationUuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
                 BluetoothGattDescriptor notificationDescriptor
                         = dataCharacteristic.getDescriptor(notificationUuid);
-                notificationDescriptor.setValue(new byte[]{0x00, 0x01});
+                notificationDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 gatt.writeDescriptor(notificationDescriptor);
             }
 
