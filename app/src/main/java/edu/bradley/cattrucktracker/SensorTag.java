@@ -32,6 +32,7 @@ class SensorTag {
                 UUID periodUuid = UUID.fromString("f000aa83-0451-4000-b000-000000000000");
                 BluetoothGattCharacteristic periodCharacteristic
                         = bluetoothGattService.getCharacteristic(periodUuid);
+                periodCharacteristic.setValue(new byte[]{0x0A});
             }
         });
     }
