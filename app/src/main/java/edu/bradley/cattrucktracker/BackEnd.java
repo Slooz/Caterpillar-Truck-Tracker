@@ -14,7 +14,7 @@ import microsoft.aspnet.signalr.client.hubs.HubProxy;
 
 class BackEnd {
     private final HubProxy hubProxy;
-    private final String serialNumber = "0";
+    private final String serialNumber = "12345678";
 
     BackEnd() throws ExecutionException, InterruptedException {
         AndroidPlatformComponent androidPlatformComponent = new AndroidPlatformComponent();
