@@ -29,7 +29,8 @@ class BackEnd {
     }
 
     void sendTruckLocationAndSpeed(double latitude, double longitude, Float speed) {
-        hubProxy.invoke("PostGeo", serialNumber, latitude, longitude, speed);
+        long currentTime = System.currentTimeMillis();
+        hubProxy.invoke("PostGeo", serialNumber, latitude, longitude, speed, currentTime);
     }
 
     void sendTruckStateAndTime(TruckState.Type truckState) {
