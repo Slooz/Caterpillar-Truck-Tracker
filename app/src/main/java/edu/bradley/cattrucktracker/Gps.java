@@ -6,6 +6,8 @@ package edu.bradley.cattrucktracker;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -16,6 +18,8 @@ class Gps implements LocationListener, GoogleApiClient.ConnectionCallbacks {
     private final GoogleApiClient googleApiClient;
     private final TruckState truckState;
     private final BackEnd backEnd;
+
+    private Long millisecondsSinceStopped = 0L;
 
     Gps(GoogleApiClient.Builder googleApiClientBuilder, TruckState truckState, BackEnd backEnd) {
         googleApiClientBuilder
@@ -48,6 +52,23 @@ class Gps implements LocationListener, GoogleApiClient.ConnectionCallbacks {
         if (location.hasSpeed()) {
             speed = location.getSpeed();
             truckMoving = speed > 0;
+
+            if (truckMoving) {
+                millisecondsSinceStopped = null;
+            }
+            else {
+                long elapsedRealtime = SystemClock.elapsedRealtime();
+                if (millisecondsSinceStopped == null) {
+                    millisecondsSinceStopped = elapsedRealtime;
+                    truckMoving = true;
+                }
+                else if (elapsedRealtime - millisecondsSinceStopped <= 347) {
+                    truckMoving = true;
+                }
+            }
+        }
+        else {
+            millisecondsSinceStopped = null;
         }
 
         truckState.setTruckMovingStateAndUpdate(truckMoving);
