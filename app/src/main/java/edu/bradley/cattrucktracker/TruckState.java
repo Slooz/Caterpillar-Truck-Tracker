@@ -37,7 +37,7 @@ class TruckState {
     void update() {
         Type oldType = type;
 
-        if (truckMoving == null || truckBedVibrating == null) {
+        if (truckMoving == null || truckBedVibrating == null || truckBedRotating == null) {
             type = Type.UNKNOWN;
         } else {
             if (truckMoving) {
