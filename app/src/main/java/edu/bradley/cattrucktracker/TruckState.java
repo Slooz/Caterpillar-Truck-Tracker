@@ -34,7 +34,7 @@ class TruckState {
         this.truckBedRotating = truckBedRotating;
     }
 
-    private void update() {
+    void update() {
         Type oldType = type;
 
         if (truckMoving == null || deviceAccelerating == null) {

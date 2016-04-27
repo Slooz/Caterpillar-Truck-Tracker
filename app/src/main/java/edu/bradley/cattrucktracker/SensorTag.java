@@ -135,6 +135,8 @@ class SensorTag {
                 else {
                     SensorTag.this.truckState.setTruckBedVibrating(false);
                 }
+
+                SensorTag.this.truckState.update();
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
