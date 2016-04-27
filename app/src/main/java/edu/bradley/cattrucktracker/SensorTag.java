@@ -79,7 +79,7 @@ class SensorTag {
                                                 BluetoothGattCharacteristic characteristic) {
                 byte[] movementData = characteristic.getValue();
 
-                int gyroscopeRange = 250;
+                double gyroscopeRange = 250;
                 byte gyroscopeXFirstByte = movementData[0];
                 byte gyroscopeXSecondByte = movementData[1];
                 double gyroscopeX = convertRawDatum
@@ -95,7 +95,7 @@ class SensorTag {
                 double gyroscopeZ = convertRawDatum
                         (gyroscopeZFirstByte, gyroscopeZSecondByte, gyroscopeRange);
 
-                int accelerometerRange = 2;
+                double accelerometerRange = 2;
                 byte accelerometerXFirstByte = movementData[6];
                 byte accelerometerXSecondByte = movementData[7];
                 double accelerometerX = convertRawDatum
@@ -146,7 +146,7 @@ class SensorTag {
                 return (double) byteBuffer.getShort(0);
             }
 
-            private double convertRawDatum(byte firstRawByte, byte secondRawByte, int range) {
+            private double convertRawDatum(byte firstRawByte, byte secondRawByte, double range) {
                 double rawDatum = wordToDouble(firstRawByte, secondRawByte);
 
                 int signedShortValueCount = Short.MAX_VALUE + 1;
