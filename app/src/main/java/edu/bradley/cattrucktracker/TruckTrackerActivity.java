@@ -27,7 +27,7 @@ public class TruckTrackerActivity extends Activity {
         GoogleApiClient.Builder googleApiClientBuilder = new GoogleApiClient.Builder(this);
         new Gps(googleApiClientBuilder, truckState, backEnd);
 
-        new SensorTag(this, backEnd);
+        new SensorTag(this, truckState, backEnd);
 
         finish();
     }

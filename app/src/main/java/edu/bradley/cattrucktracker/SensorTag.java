@@ -21,9 +21,10 @@ import java.util.UUID;
 class SensorTag {
     private final double GYROSCOPE_RANGE = 250;
     private final double ACCELEROMETER_RANGE = 8;
+    private final TruckState truckState;
     private final BackEnd backEnd;
 
-    SensorTag(Context context, final BackEnd backEnd) {
+    SensorTag(Context context, TruckState truckState, BackEnd backEnd) {
         BluetoothManager bluetoothManager
                 = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
@@ -110,6 +111,18 @@ class SensorTag {
                 byte accelerometerZSecondByte = movementData[11];
                 double accelerometerZ = convertRawDatum
                         (accelerometerZFirstByte, accelerometerZSecondByte, ACCELEROMETER_RANGE);
+
+                double accelerometerXMagnitude = Math.abs(accelerometerX);
+                double accelerometerYMagnitude = Math.abs(accelerometerY);
+                double accelerometerZMagnitude = Math.abs(accelerometerZ);
+
+                if (accelerometerXMagnitude >= 0.2175 || accelerometerYMagnitude >= 0.2175
+                        || accelerometerZMagnitude >= 0.2175) {
+                    SensorTag.this.truckState.setTruckBedVibrating(true);
+                }
+                else {
+                    SensorTag.this.truckState.setTruckBedVibrating(false);
+                }
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
@@ -137,6 +150,7 @@ class SensorTag {
             }
         });
 
+        this.truckState = truckState;
         this.backEnd = backEnd;
     }
 }

@@ -25,10 +25,8 @@ class TruckState {
         update();
     }
 
-    void setDeviceAcceleratingStateAndUpdate(Boolean deviceAccelerating) {
+    void setTruckBedVibrating(Boolean deviceAccelerating) {
         this.deviceAccelerating = deviceAccelerating;
-
-        update();
     }
 
     private void update() {
