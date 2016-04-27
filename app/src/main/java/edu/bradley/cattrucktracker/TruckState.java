@@ -10,7 +10,7 @@ class TruckState {
     private Type type = Type.UNKNOWN;
 
     private Boolean truckMoving;
-    private Boolean deviceAccelerating;
+    private Boolean truckBedVibrating;
     private Boolean truckBedRotating;
     private boolean truckLoaded = false;
 
@@ -26,8 +26,8 @@ class TruckState {
         update();
     }
 
-    void setTruckBedVibrating(Boolean deviceAccelerating) {
-        this.deviceAccelerating = deviceAccelerating;
+    void setTruckBedVibrating(Boolean truckBedVibrating) {
+        this.truckBedVibrating = truckBedVibrating;
     }
 
     void setTruckBedRotating(boolean truckBedRotating) {
@@ -37,7 +37,7 @@ class TruckState {
     void update() {
         Type oldType = type;
 
-        if (truckMoving == null || deviceAccelerating == null) {
+        if (truckMoving == null || truckBedVibrating == null) {
             type = Type.UNKNOWN;
         } else {
             if (truckMoving) {
@@ -46,7 +46,7 @@ class TruckState {
                 type = Type.STOPPED;
             }
 
-            if (type == Type.STOPPED && deviceAccelerating) {
+            if (type == Type.STOPPED && truckBedVibrating) {
                 if (truckLoaded) {
                     type = Type.STATIC_DUMP;
                     truckLoaded = false;
