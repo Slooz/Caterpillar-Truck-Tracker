@@ -19,6 +19,8 @@ import java.nio.ByteOrder;
 import java.util.UUID;
 
 class SensorTag {
+    private final double GYROSCOPE_RANGE = 250;
+    private final double ACCELEROMETER_RANGE = 8;
     private final BackEnd backEnd;
 
     SensorTag(Context context, final BackEnd backEnd) {
@@ -79,37 +81,35 @@ class SensorTag {
                                                 BluetoothGattCharacteristic characteristic) {
                 byte[] movementData = characteristic.getValue();
 
-                double gyroscopeRange = 250;
                 byte gyroscopeXFirstByte = movementData[0];
                 byte gyroscopeXSecondByte = movementData[1];
                 double gyroscopeX = convertRawDatum
-                        (gyroscopeXFirstByte, gyroscopeXSecondByte, gyroscopeRange);
+                        (gyroscopeXFirstByte, gyroscopeXSecondByte, GYROSCOPE_RANGE);
 
                 byte gyroscopeYFirstByte = movementData[2];
                 byte gyroscopeYSecondByte = movementData[3];
                 double gyroscopeY = convertRawDatum
-                        (gyroscopeYFirstByte, gyroscopeYSecondByte, gyroscopeRange);
+                        (gyroscopeYFirstByte, gyroscopeYSecondByte, GYROSCOPE_RANGE);
 
                 byte gyroscopeZFirstByte = movementData[4];
                 byte gyroscopeZSecondByte = movementData[5];
                 double gyroscopeZ = convertRawDatum
-                        (gyroscopeZFirstByte, gyroscopeZSecondByte, gyroscopeRange);
+                        (gyroscopeZFirstByte, gyroscopeZSecondByte, GYROSCOPE_RANGE);
 
-                double accelerometerRange = 8;
                 byte accelerometerXFirstByte = movementData[6];
                 byte accelerometerXSecondByte = movementData[7];
                 double accelerometerX = convertRawDatum
-                        (accelerometerXFirstByte, accelerometerXSecondByte, accelerometerRange);
+                        (accelerometerXFirstByte, accelerometerXSecondByte, ACCELEROMETER_RANGE);
 
                 byte accelerometerYFirstByte = movementData[8];
                 byte accelerometerYSecondByte = movementData[9];
                 double accelerometerY = convertRawDatum
-                        (accelerometerYFirstByte, accelerometerYSecondByte, accelerometerRange);
+                        (accelerometerYFirstByte, accelerometerYSecondByte, ACCELEROMETER_RANGE);
 
                 byte accelerometerZFirstByte = movementData[10];
                 byte accelerometerZSecondByte = movementData[11];
                 double accelerometerZ = convertRawDatum
-                        (accelerometerZFirstByte, accelerometerZSecondByte, accelerometerRange);
+                        (accelerometerZFirstByte, accelerometerZSecondByte, ACCELEROMETER_RANGE);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
