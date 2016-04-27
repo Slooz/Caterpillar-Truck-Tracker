@@ -125,10 +125,6 @@ class SensorTag {
                 byte magnetometerZSecondByte = movementData[17];
                 double magnetometerZ
                         = wordToDouble(magnetometerZFirstByte, magnetometerZSecondByte);
-
-                backEnd.sendSensorTagMovementData(gyroscopeX, gyroscopeY, gyroscopeZ,
-                        accelerometerX, accelerometerY, accelerometerZ, magnetometerX,
-                        magnetometerY, magnetometerZ);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {

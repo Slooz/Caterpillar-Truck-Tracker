@@ -37,13 +37,4 @@ class BackEnd {
         long currentTime = System.currentTimeMillis();
         hubProxy.invoke("PostStateChange", truckState, currentTime, serialNumber);
     }
-
-    void sendSensorTagMovementData(double gyroscopeX, double gyroscopeY, double gyroscopeZ,
-                                   double accelerometerX, double accelerometerY,
-                                   double accelerometerZ, double magnetometerX,
-                                   double magnetometerY, double magnetometerZ) {
-        long currentTime = System.currentTimeMillis();
-        hubProxy.invoke("Log", currentTime, gyroscopeX, gyroscopeY, gyroscopeZ, accelerometerX,
-                accelerometerY, accelerometerZ, magnetometerX, magnetometerY, magnetometerZ);
-    }
 }
