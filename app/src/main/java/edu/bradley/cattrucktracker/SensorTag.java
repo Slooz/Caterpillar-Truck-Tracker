@@ -70,7 +70,7 @@ class SensorTag {
                 UUID configurationUuid = UUID.fromString("f000aa82-0451-4000-b000-000000000000");
                 BluetoothGattCharacteristic configurationCharacteristic
                         = movementService.getCharacteristic(configurationUuid);
-                configurationCharacteristic.setValue(new byte[]{0x7F, 0x02});
+                configurationCharacteristic.setValue(new byte[]{0x3F, 0x02});
                 gatt.writeCharacteristic(configurationCharacteristic);
             }
 
@@ -110,21 +110,6 @@ class SensorTag {
                 byte accelerometerZSecondByte = movementData[11];
                 double accelerometerZ = convertRawDatum
                         (accelerometerZFirstByte, accelerometerZSecondByte, accelerometerRange);
-
-                byte magnetometerXFirstByte = movementData[12];
-                byte magnetometerXSecondByte = movementData[13];
-                double magnetometerX
-                        = wordToDouble(magnetometerXFirstByte, magnetometerXSecondByte);
-
-                byte magnetometerYFirstByte = movementData[14];
-                byte magnetometerYSecondByte = movementData[15];
-                double magnetometerY
-                        = wordToDouble(magnetometerYFirstByte, magnetometerYSecondByte);
-
-                byte magnetometerZFirstByte = movementData[16];
-                byte magnetometerZSecondByte = movementData[17];
-                double magnetometerZ
-                        = wordToDouble(magnetometerZFirstByte, magnetometerZSecondByte);
             }
 
             private BluetoothGattService getMovementService(BluetoothGatt bluetoothGatt) {
