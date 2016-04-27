@@ -12,7 +12,6 @@ class TruckState {
     private Boolean truckMoving;
     private Boolean truckBedVibrating;
     private Boolean truckBedUp;
-    private boolean truckLoaded = false;
 
     TruckState(BackEnd backEnd) {
         this.backEnd = backEnd;
@@ -40,19 +39,20 @@ class TruckState {
         if (truckMoving == null || truckBedVibrating == null || truckBedUp == null) {
             type = Type.UNKNOWN;
         } else {
-            if (truckMoving) {
+            if (truckMoving && truckBedUp) {
+                type = Type.MOVING_DUMP;
+            }
+            else if (truckMoving) {
                 type = Type.MOVING;
             } else if (type == Type.MOVING || type == Type.UNKNOWN) {
                 type = Type.STOPPED;
             }
 
-            if (type == Type.STOPPED && truckBedVibrating) {
-                if (truckLoaded) {
+            if (type == Type.STOPPED) {
+                if (truckBedUp) {
                     type = Type.STATIC_DUMP;
-                    truckLoaded = false;
-                } else {
+                } else if (truckBedVibrating) {
                     type = Type.LOADING;
-                    truckLoaded = true;
                 }
             }
         }
