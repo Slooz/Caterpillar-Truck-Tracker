@@ -11,7 +11,7 @@ class TruckState {
 
     private Boolean truckMoving;
     private Boolean truckBedVibrating;
-    private Boolean truckBedRotating;
+    private Boolean truckBedUp;
     private boolean truckLoaded = false;
 
     TruckState(BackEnd backEnd) {
@@ -30,14 +30,14 @@ class TruckState {
         this.truckBedVibrating = truckBedVibrating;
     }
 
-    void setTruckBedRotating(boolean truckBedRotating) {
-        this.truckBedRotating = truckBedRotating;
+    void setTruckBedUp(boolean truckBedUp) {
+        this.truckBedUp = truckBedUp;
     }
 
     void update() {
         Type oldType = type;
 
-        if (truckMoving == null || truckBedVibrating == null || truckBedRotating == null) {
+        if (truckMoving == null || truckBedVibrating == null || truckBedUp == null) {
             type = Type.UNKNOWN;
         } else {
             if (truckMoving) {

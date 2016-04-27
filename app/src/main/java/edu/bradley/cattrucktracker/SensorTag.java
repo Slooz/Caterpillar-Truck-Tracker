@@ -101,12 +101,11 @@ class SensorTag {
                 double gyroscopeYMagnitude = Math.abs(gyroscopeY);
                 double gyroscopeZMagnitude = Math.abs(gyroscopeZ);
 
-                if (gyroscopeXMagnitude >= 18.8753 || gyroscopeYMagnitude >= 18.8753
-                        || gyroscopeZMagnitude >= 18.8753) {
-                    SensorTag.this.truckState.setTruckBedRotating(true);
+                if (gyroscopeZMagnitude >= 14.8410) {
+                    SensorTag.this.truckState.setTruckBedUp(true);
                 }
-                else {
-                    SensorTag.this.truckState.setTruckBedRotating(false);
+                else if (gyroscopeZMagnitude <= -14.8410) {
+                    SensorTag.this.truckState.setTruckBedUp(false);
                 }
 
                 byte accelerometerXFirstByte = movementData[6];
