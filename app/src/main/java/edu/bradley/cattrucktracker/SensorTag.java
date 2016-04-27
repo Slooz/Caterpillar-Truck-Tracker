@@ -97,6 +97,18 @@ class SensorTag {
                 double gyroscopeZ = convertRawDatum
                         (gyroscopeZFirstByte, gyroscopeZSecondByte, GYROSCOPE_RANGE);
 
+                double gyroscopeXMagnitude = Math.abs(gyroscopeX);
+                double gyroscopeYMagnitude = Math.abs(gyroscopeY);
+                double gyroscopeZMagnitude = Math.abs(gyroscopeZ);
+
+                if (gyroscopeXMagnitude >= 18.8753 || gyroscopeYMagnitude >= 18.8753
+                        || gyroscopeZMagnitude >= 18.8753) {
+                    SensorTag.this.truckState.setTruckBedRotating(true);
+                }
+                else {
+                    SensorTag.this.truckState.setTruckBedRotating(false);
+                }
+
                 byte accelerometerXFirstByte = movementData[6];
                 byte accelerometerXSecondByte = movementData[7];
                 double accelerometerX = convertRawDatum

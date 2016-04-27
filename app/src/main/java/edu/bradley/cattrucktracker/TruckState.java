@@ -11,6 +11,7 @@ class TruckState {
 
     private Boolean truckMoving;
     private Boolean deviceAccelerating;
+    private Boolean truckBedRotating;
     private boolean truckLoaded = false;
 
     TruckState(BackEnd backEnd) {
@@ -27,6 +28,10 @@ class TruckState {
 
     void setTruckBedVibrating(Boolean deviceAccelerating) {
         this.deviceAccelerating = deviceAccelerating;
+    }
+
+    void setTruckBedRotating(boolean truckBedRotating) {
+        this.truckBedRotating = truckBedRotating;
     }
 
     private void update() {
