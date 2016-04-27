@@ -70,7 +70,7 @@ class SensorTag {
                 UUID configurationUuid = UUID.fromString("f000aa82-0451-4000-b000-000000000000");
                 BluetoothGattCharacteristic configurationCharacteristic
                         = movementService.getCharacteristic(configurationUuid);
-                configurationCharacteristic.setValue(new byte[]{0x7F, 0x00});
+                configurationCharacteristic.setValue(new byte[]{0x7F, 0x02});
                 gatt.writeCharacteristic(configurationCharacteristic);
             }
 
@@ -95,7 +95,7 @@ class SensorTag {
                 double gyroscopeZ = convertRawDatum
                         (gyroscopeZFirstByte, gyroscopeZSecondByte, gyroscopeRange);
 
-                double accelerometerRange = 2;
+                double accelerometerRange = 8;
                 byte accelerometerXFirstByte = movementData[6];
                 byte accelerometerXSecondByte = movementData[7];
                 double accelerometerX = convertRawDatum
