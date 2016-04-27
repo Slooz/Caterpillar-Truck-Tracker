@@ -73,7 +73,7 @@ class SensorTag {
                 UUID configurationUuid = UUID.fromString("f000aa82-0451-4000-b000-000000000000");
                 BluetoothGattCharacteristic configurationCharacteristic
                         = movementService.getCharacteristic(configurationUuid);
-                configurationCharacteristic.setValue(new byte[]{0x3F, 0x02});
+                configurationCharacteristic.setValue(new byte[]{0x39, 0x02});
                 gatt.writeCharacteristic(configurationCharacteristic);
             }
 
@@ -82,29 +82,15 @@ class SensorTag {
                                                 BluetoothGattCharacteristic characteristic) {
                 byte[] movementData = characteristic.getValue();
 
-                byte gyroscopeXFirstByte = movementData[0];
-                byte gyroscopeXSecondByte = movementData[1];
-                double gyroscopeX = convertRawDatum
-                        (gyroscopeXFirstByte, gyroscopeXSecondByte, GYROSCOPE_RANGE);
-
-                byte gyroscopeYFirstByte = movementData[2];
-                byte gyroscopeYSecondByte = movementData[3];
-                double gyroscopeY = convertRawDatum
-                        (gyroscopeYFirstByte, gyroscopeYSecondByte, GYROSCOPE_RANGE);
-
                 byte gyroscopeZFirstByte = movementData[4];
                 byte gyroscopeZSecondByte = movementData[5];
                 double gyroscopeZ = convertRawDatum
                         (gyroscopeZFirstByte, gyroscopeZSecondByte, GYROSCOPE_RANGE);
 
-                double gyroscopeXMagnitude = Math.abs(gyroscopeX);
-                double gyroscopeYMagnitude = Math.abs(gyroscopeY);
-                double gyroscopeZMagnitude = Math.abs(gyroscopeZ);
-
-                if (gyroscopeZMagnitude >= 14.8410) {
+                if (gyroscopeZ >= 14.8410) {
                     SensorTag.this.truckState.setTruckBedUp(true);
                 }
-                else if (gyroscopeZMagnitude <= -14.8410) {
+                else if (gyroscopeZ <= -14.8410) {
                     SensorTag.this.truckState.setTruckBedUp(false);
                 }
 
